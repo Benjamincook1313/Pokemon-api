@@ -22,7 +22,6 @@ export default class App extends Component {
 
   render() {
 
-
     const increment = () => {
       this.setState({
         count: this.state.count + 1
@@ -36,9 +35,9 @@ export default class App extends Component {
     };
 
     const getPokemon = async () => {
-      const res = await axios.get('/https://pokeapi.co/api/v2/Pokemon')
-      .catch(err => console.error(err))
+      let res = await axios.get('/pokeapi.co/api/v2/Pokemon')
       console.log(res)
+      .catch(err => console.error(err))
     };
 
     return (

@@ -10,8 +10,8 @@ app.get('/api/get', (req, res) => {
   res.status(200).send({message: 'Its Working - Anakin Skywalker'})
 });
 
-app.get('/https://pokeapi.co/api/v2/Pokemon/1', (req, res) => {
-  res.status(200).send(res)
+app.get('/pokeapi.co/api/v2/pokemon/', (req, res) => {
+  res.status(200).send(res, 'It Worked')
 
 });
 

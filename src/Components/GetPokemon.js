@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Cards from './Card';
+import Card from './Card';
 
 
 export default class GetPokemon extends Component {
@@ -7,54 +7,49 @@ export default class GetPokemon extends Component {
     super()
 
     this.state = {
-      loading: false,
+      loaded: false,
       url: 'https://pokeapi.co/api/v2/pokemon/1',
       pokeData: {},
     }
 
-    // const getPokemon = async () => {
-    //   this.setState({loading: true})
-    //   const res = await fetch(this.state.url)
-    //   const data = await res.json()
-    //     this.setState({
-    //       loading: false,
-    //       pokeData: data
-    //     })
-    // }
-
   };
   
-  // componentDidMount(){
-  //   getPokemon()
-  // }
   
   render() {
-    const { url, loading, pokeData } = this.state
+    const { url, loaded, pokeData } = this.state
 
     const getPokemon = async () => {
-      this.setState({loading: true})
       const res = await fetch(url)
       const data = await res.json()
         this.setState({
-          loading: false,
+          loaded: true,
           pokeData: data
         })
     };
 
-    // console.log(pokeData.sprites.other.dream_world.front_default)
+    // const createCard = pokeData.map((pokemon, i) => {
+    //   <Card 
+    //     id={pokeData.id}
+    //     name={pokeData.name}
+    //     img={pokeData.sprites.other.dream_world.front_default}
+    //     type={pokeData.types[0].type.name}
+    //     key={i}
+    //   />
+    // });
+
     console.log(pokeData)
     return (
       <div>
         <button onClick={getPokemon}>Get Pokemon</button>
-        {loading ?  
+        {loaded ?  
           <div>
-            <h2>...loading</h2>
-            {/* <img src={pokeData.sprites.other.dream_world.front_default} alt={pokeData.name} /> */}
-          </div>
-          : ''
+            <img src={pokeData.sprites.other.dream_world.front_default} alt={pokeData.name} />
+          </div>: 
+          <h3>...loading</h3>
         }
-        {/* {Cards} */}
+        {/* {createCard} */}
         <h1>{pokeData.name}</h1>
+        {/* <h2>{pokeData.id}</h2> */}
         {/* <img src={pokeData.sprites.other.dream_world.front_default} alt={pokeData.name}/> */}
       </div>
     )

@@ -4,17 +4,17 @@ export default class Card extends Component {
   constructor(props){
     super(props)
     
-    const {id, name, img, type} = props
-
+    
   };
-
-
+  
+  
   render() {
-
+    
+    const {id, name, img, type} = this.props
 
     return (
       <div className='card'>
-        
+        <img src={img} alt={name} />
       </div>
     )
   }

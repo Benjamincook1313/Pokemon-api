@@ -1,78 +1,72 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import './App.css';
-import Card from './Components/Card';
+import React, { Component } from 'react'
+import axios from 'axios'
+import './App.css'
+import Card from './Components/Card'
 
 export default class App extends Component {
-  constructor(){
-    super()
+  constructor(props){
+    super(props)
 
     this.state = {
-      message: '',
-      loading: false,
-      loaded: false,
-      url: 'https://pokeapi.co/api/v2/pokemon?limit=20',
-      pokeData: []
+      url: 'https://pokeapi.co/api/v2/pokemon',
+      allPokemon:[],
+      isLoaded: false
     }
 
   };
   
-  componentDidMount() {
-    axios.get('/api/get')
-    .then(res =>  this.setState({
-        message: res.data.message
+  async componentDidMount() {
+    const res = await axios.get(this.state.url)
+    const data = res.data
+    this.setState({
+      url: data.next
+    })
+
+    const getEachPokemon = (result) => {
+      result.forEach(async pokemon => {
+        const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+        const data = res.data
+        await this.setState({
+          allPokemon: [...this.state.allPokemon, data]
+        })
       })
-      ).catch(err => console.error(err))
-      console.log('connected to server')
+      this.setState({loaded: true})
+    }
+    axios.get('https://pokeapi.co/api/v2/pokemon/1').then(res =>{
+      console.log(res.data)
+    })
+
+    getEachPokemon(data.results)
   };
 
   render() {
+    const { url, allPokemon, loaded} = this.state
 
-    const { pokeData, url } = this.state
+    const getMore = async () => {
+      // const res = await axios.get(url)
+      // const data = res.data
+      
+      this.setState({loaded: false})
 
-    const getPokemon = async () => {
-      const res = await fetch(url)
-      const data = await res.json()
-      this.setState({ 
-        url: data.next,
-        loading: true
-      })
-
-      const allPokemon = (result) => {
-        result.forEach(async pokemon => {
-          const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
-          const data = await res.json()
-          // console.log(data.name)
-          this.setState({
-            pokeData: [...pokeData, data],
-            loaded: true
-          })
-        })
-        this.setState({loading: false})
-      };
-
-        allPokemon(data.results)
     };
-            // <Card 
-            //   id = {pokemon.id}
-            //   name = {pokemon.name}
-            //   img = {pokemon.sprites.other.dream_world.front_default}
-            //   type = {pokemon.types[0].type.name}
-            //   key = {i}
-            // />
-
+    
     return (
       <div className='App'>
-        <h4>{this.state.message}</h4>
-        <button onClick={getPokemon}>Get Pokemon</button>
-          <ol>
-            { pokeData.map((pokemon, i) => 
-              <li key={i}>
-                {pokemon.name}
-                {console.log(pokemon.name)}
-              </li>
-            )}
-          </ol>   
+        <h1>Welcome, Pokemon Trainer!</h1>
+        <div className='card-wrapper'>
+          {loaded? allPokemon.map((pokemon, i) => (
+            <Card 
+              key={i}
+              id={pokemon.id}
+              name={pokemon.name}
+              img={pokemon.sprites.other.dream_world.front_default}
+              type={pokemon.types.forEach(type => type.name)}
+            />
+            ))
+            :'...loading'
+          }
+        </div>
+        <button onClick={getMore}>Get More Pokemon</button>
       </div>
     )
   }

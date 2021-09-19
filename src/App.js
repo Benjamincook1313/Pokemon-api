@@ -10,7 +10,7 @@ export default class App extends Component {
     this.state = {
       url: 'https://pokeapi.co/api/v2/pokemon',
       allPokemon:[],
-      isLoaded: false
+      loaded: false
     }
 
   };
@@ -60,7 +60,7 @@ export default class App extends Component {
               id={pokemon.id}
               name={pokemon.name}
               img={pokemon.sprites.other.dream_world.front_default}
-              type={pokemon.types.forEach(type => type.name)}
+              types={pokemon.types}
             />
             ))
             :'...loading'

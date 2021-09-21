@@ -13,46 +13,52 @@ export default class App extends Component {
       loaded: false
     }
 
+    this.getPokemon = async () => {
+      const res = await axios.get(this.state.url)
+      const data = res.data
+      
+      this.setState({
+        url: data.next
+      })
+
+      const getEachPokemon = (result) => {
+        result.forEach(async pokemon => {
+          const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+          const data = res.data
+          await this.setState({
+            allPokemon: [...this.state.allPokemon, data]
+          })
+        })
+        this.setState({loaded: true})
+      }
+      axios.get('https://pokeapi.co/api/v2/pokemon/1').then(res =>{
+        console.log(res.data)
+      })
+
+      getEachPokemon(data.results)
+
+    };
+
   };
   
   async componentDidMount() {
-    const res = await axios.get(this.state.url)
-    const data = res.data
-    this.setState({
-      url: data.next
-    })
 
-    const getEachPokemon = (result) => {
-      result.forEach(async pokemon => {
-        const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
-        const data = res.data
-        await this.setState({
-          allPokemon: [...this.state.allPokemon, data]
-        })
-      })
-      this.setState({loaded: true})
-    }
-    axios.get('https://pokeapi.co/api/v2/pokemon/1').then(res =>{
-      console.log(res.data)
-    })
+    this.getPokemon()
 
-    getEachPokemon(data.results)
   };
 
   render() {
     const { url, allPokemon, loaded} = this.state
 
-    const getMore = async () => {
-      // const res = await axios.get(url)
-      // const data = res.data
-      
-      this.setState({loaded: false})
-
-    };
     
     return (
       <div className='App'>
         <h1>Welcome, Pokemon Trainer!</h1>
+        <div className='sort-btns'>
+          <button>Sort A - Z</button>
+          <button>Sort by #</button>
+          <button>Play Memory</button>
+        </div>
         <div className='card-wrapper'>
           {loaded? allPokemon.map((pokemon, i) => (
             <Card 
@@ -66,7 +72,7 @@ export default class App extends Component {
             :'...loading'
           }
         </div>
-        <button onClick={getMore}>Get More Pokemon</button>
+        <button onClick={this.getPokemon}>Get More Pokemon</button>
       </div>
     )
   }

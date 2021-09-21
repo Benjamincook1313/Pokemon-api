@@ -17,7 +17,7 @@ const Card = ({id, name, img, types}) => {
   };
 
   return (
-    <div className='Card' style={{backgroundColor: {typeColor}}}>
+    <div className='Card'>
       <p>#0{id}</p>
       <div className='img-container'>
         <img className='poke-img' src={img} alt={name} />

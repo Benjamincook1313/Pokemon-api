@@ -50,12 +50,24 @@ export default class App extends Component {
   render() {
     const { url, allPokemon, loaded} = this.state
 
-    
+    const aToZ = () => {
+      const sortedPokemon = allPokemon.sort((poke, mon) => {
+        if(poke.name < mon.name ) return -1 
+        if(mon.name < poke.name ) return 1 
+        else return 0
+      })
+      this.setState({allPokemon: sortedPokemon})
+    }
+
+    const sortByNum = () => {
+      
+    }
+
     return (
       <div className='App'>
         <h1>Welcome, Pokemon Trainer!</h1>
         <div className='sort-btns'>
-          <button>Sort A - Z</button>
+          <button onClick={aToZ}>Sort A - Z</button>
           <button>Sort by #</button>
           <button>Play Memory</button>
         </div>

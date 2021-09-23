@@ -60,7 +60,12 @@ export default class App extends Component {
     }
 
     const sortByNum = () => {
-      
+      const sortedPokemon = allPokemon.sort((poke, mon) => {
+        if(poke.id < mon.id ) return -1 
+        if(mon.id < poke.id ) return 1 
+        else return 0
+      })
+      this.setState({allPokemon: sortedPokemon})
     }
 
     return (
@@ -68,7 +73,7 @@ export default class App extends Component {
         <h1>Welcome, Pokemon Trainer!</h1>
         <div className='sort-btns'>
           <button onClick={aToZ}>Sort A - Z</button>
-          <button>Sort by #</button>
+          <button onClick={sortByNum}>Sort by #</button>
           <button>Play Memory</button>
         </div>
         <div className='card-wrapper'>

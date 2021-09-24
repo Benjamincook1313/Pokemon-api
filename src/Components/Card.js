@@ -2,19 +2,19 @@ import React from 'react'
 
 const Card = ({id, name, img, types}) => {
 
-  const typeColor = () => {
-    console.log(types[0].type.name)
-    switch(types[0].type.name){
-      case 'grass': 
-        return 'lightgreen'
-        break;
-      case 'bug':
-        return 'lightyellow'
-        break;
-      default: 
-        return 'white'
-    }
-  };
+  // const typeColor = () => {
+  //   console.log(types[0].type.name)
+  //   switch(types[0].type.name){
+  //     case 'grass': 
+  //       return 'lightgreen'
+  //       break;
+  //     case 'bug':
+  //       return 'lightyellow'
+  //       break;
+  //     default: 
+  //       return 'white'
+  //   }
+  // };
 
   return (
     <div className='Card'>

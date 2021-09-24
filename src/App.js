@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import './App.css'
 import Card from './Components/Card'
+import { Button } from 'react-bootstrap'
 
 export default class App extends Component {
   constructor(props){
@@ -10,7 +11,8 @@ export default class App extends Component {
     this.state = {
       url: 'https://pokeapi.co/api/v2/pokemon',
       allPokemon:[],
-      loaded: false
+      loaded: false,
+      showMemory: false
     }
 
     this.getPokemon = async () => {
@@ -48,7 +50,7 @@ export default class App extends Component {
   };
 
   render() {
-    const { url, allPokemon, loaded} = this.state
+    const { allPokemon, loaded} = this.state
 
     const aToZ = () => {
       const sortedPokemon = allPokemon.sort((poke, mon) => {
@@ -72,9 +74,9 @@ export default class App extends Component {
       <div className='App'>
         <h1>Welcome, Pokemon Trainer!</h1>
         <div className='sort-btns'>
-          <button onClick={aToZ}>Sort A - Z</button>
-          <button onClick={sortByNum}>Sort by #</button>
-          <button>Play Memory</button>
+          <Button variant='secondary' onClick={aToZ}>Sort A - Z</Button>
+          <Button variant='secondary' onClick={sortByNum}>Sort by #</Button>
+          <Button variant='secondary' >Play Memory</Button>
         </div>
         <div className='card-wrapper'>
           {loaded? allPokemon.map((pokemon, i) => (
@@ -89,7 +91,7 @@ export default class App extends Component {
             :'...loading'
           }
         </div>
-        <button onClick={this.getPokemon}>Get More Pokemon</button>
+        <Button variant='secondary' onClick={this.getPokemon}>Get More Pokemon</Button>
       </div>
     )
   }

@@ -59,7 +59,7 @@ export default class App extends Component {
         else return 0
       })
       this.setState({allPokemon: sortedPokemon})
-    }
+    };
 
     const sortByNum = () => {
       const sortedPokemon = allPokemon.sort((poke, mon) => {
@@ -68,15 +68,31 @@ export default class App extends Component {
         else return 0
       })
       this.setState({allPokemon: sortedPokemon})
-    }
+    };
+
+    const scramble = () => {
+      var arr = [...allPokemon]
+      console.log(arr)
+      for(let i=0; i < arr.length; i++){
+        let temp = arr[i]
+        let randomNum = Math.floor(Math.random() * arr.length)
+        arr[i] = arr[randomNum]
+        arr[randomNum] = temp
+      }
+
+      this.setState({
+        allPokemon: arr
+      })
+    };
 
     return (
       <div className='App'>
         <h1>Welcome, Pokemon Trainer!</h1>
         <div className='sort-btns'>
-          <Button variant='secondary' onClick={aToZ}>Sort A - Z</Button>
-          <Button variant='secondary' onClick={sortByNum}>Sort by #</Button>
-          <Button variant='secondary' >Play Memory</Button>
+          <Button variant='secondary' onClick={sortByNum}>Sort By #</Button>
+          <Button variant='secondary' onClick={aToZ}>A - Z</Button>
+          <Button variant='primary' onClick={scramble}>Scramble</Button>
+          {/* <Button variant='secondary' >Memory</Button> */}
         </div>
         <div className='card-wrapper'>
           {loaded? allPokemon.map((pokemon, i) => (
@@ -94,7 +110,7 @@ export default class App extends Component {
         <Button variant='secondary' onClick={this.getPokemon}>Get More Pokemon</Button>
       </div>
     )
-  }
+  };
 };
 
 

@@ -12,7 +12,7 @@ export default class App extends Component {
       url: 'https://pokeapi.co/api/v2/pokemon',
       allPokemon:[],
       loaded: false,
-      showMemory: false
+      search: ''
     }
 
     this.getPokemon = async () => {
@@ -52,6 +52,12 @@ export default class App extends Component {
   render() {
     const { allPokemon, loaded} = this.state
 
+    const handleChange = (value) => {
+      this.setState({search: value})
+    };
+
+    // sorts pokemon cards A - Z
+
     const aToZ = () => {
       const sortedPokemon = allPokemon.sort((poke, mon) => {
         if(poke.name < mon.name ) return -1 
@@ -60,6 +66,8 @@ export default class App extends Component {
       })
       this.setState({allPokemon: sortedPokemon})
     };
+
+    // sort pokemon cards by number
 
     const sortByNum = () => {
       const sortedPokemon = allPokemon.sort((poke, mon) => {
@@ -70,20 +78,23 @@ export default class App extends Component {
       this.setState({allPokemon: sortedPokemon})
     };
 
+    // function that scrambles the order of the pokemon cards
+
     const scramble = () => {
-      var arr = [...allPokemon]
-      console.log(arr)
+      let arr = [...allPokemon]
       for(let i=0; i < arr.length; i++){
         let temp = arr[i]
         let randomNum = Math.floor(Math.random() * arr.length)
         arr[i] = arr[randomNum]
         arr[randomNum] = temp
       }
-
       this.setState({
         allPokemon: arr
       })
     };
+
+    // get all  1st generation pokemon
+
 
     return (
       <div className='App'>
@@ -92,7 +103,9 @@ export default class App extends Component {
           <Button variant='secondary' onClick={sortByNum}>Sort By #</Button>
           <Button variant='secondary' onClick={aToZ}>A - Z</Button>
           <Button variant='primary' onClick={scramble}>Scramble</Button>
-          {/* <Button variant='secondary' >Memory</Button> */}
+          <Button variant='secondary' >Original 150</Button>
+          <Button variant='secondary' >Memory</Button>
+          <input onChange={handleChange} placeholder='search'></input>
         </div>
         <div className='card-wrapper'>
           {loaded? allPokemon.map((pokemon, i) => (

@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import './App.css'
 import Card from './Components/Card'
-import { Button } from 'react-bootstrap'
+import { Button, InputGroup, FormControl, DropdownButton, Dropdown } from 'react-bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default class App extends Component {
   constructor(props){
@@ -12,7 +13,8 @@ export default class App extends Component {
       url: 'https://pokeapi.co/api/v2/pokemon',
       allPokemon:[],
       loaded: false,
-      search: ''
+      search: '',
+      selectedGen: 'Select Generation'
     }
 
     this.getPokemon = async () => {
@@ -33,7 +35,7 @@ export default class App extends Component {
         })
         this.setState({loaded: true})
       }
-      axios.get('https://pokeapi.co/api/v2/pokemon/1').then(res =>{
+      axios.get('https://pokeapi.co/api/v2/pokemon/54').then(res =>{
         console.log(res.data)
       })
 
@@ -50,7 +52,7 @@ export default class App extends Component {
   };
 
   render() {
-    const { allPokemon, loaded} = this.state
+    const { allPokemon, loaded, selectedGen} = this.state
 
     const handleChange = (value) => {
       this.setState({search: value})
@@ -93,19 +95,35 @@ export default class App extends Component {
       })
     };
 
-    // get all  1st generation pokemon
+    // get all  original 150 pokemon
+
+    const getGen = async (newUrl) => {
+      await this.setState({
+        url: newUrl[0], 
+        allPokemon: [],
+        selectedGen: newUrl[1]
+      })
+      this.getPokemon()
+    }
 
 
     return (
       <div className='App'>
         <h1>Welcome, Pokemon Trainer!</h1>
         <div className='sort-btns'>
-          <Button variant='secondary' onClick={sortByNum}>Sort By #</Button>
-          <Button variant='secondary' onClick={aToZ}>A - Z</Button>
-          <Button variant='primary' onClick={scramble}>Scramble</Button>
-          <Button variant='secondary' >Original 150</Button>
-          <Button variant='secondary' >Memory</Button>
-          <input onChange={handleChange} placeholder='search'></input>
+          <Button variant='dark' onClick={sortByNum}>Sort By #</Button>
+          <Button variant='dark' onClick={aToZ}>Sort A-Z</Button>
+          <Button variant='dark' onClick={scramble}>Shuffle</Button>
+          <DropdownButton id="dropdown-basic-button" title={selectedGen} variant='dark'>
+            <Dropdown.Item href="#/action-1" onClick={() => getGen(['https://pokeapi.co/api/v2/pokemon?limit=151', 'Gen 1'])}>Gen 1</Dropdown.Item>
+            <Dropdown.Item href="#/action-2" onClick={() => getGen(['https://pokeapi.co/api/v2/pokemon?limit=100&offset=151', 'Gen 2'])}>Gen 2</Dropdown.Item>
+            <Dropdown.Item href="#/action-3" onClick={() => getGen(['https://pokeapi.co/api/v2/pokemon?limit=135&offset=251', 'Gen 3'])}>Gen 3</Dropdown.Item>
+          </DropdownButton>
+          {/* <Button variant='secondary' >Memory Game</Button> */}
+          {/* <InputGroup className="mb-3">
+            <FormControl placeholder="Search" aria-label="Search" aria-describedby="basic-addon2" onChange={handleChange}/>
+            <Button variant="outline-secondary" id="button-addon2">search</Button>
+          </InputGroup> */}
         </div>
         <div className='card-wrapper'>
           {loaded? allPokemon.map((pokemon, i) => (

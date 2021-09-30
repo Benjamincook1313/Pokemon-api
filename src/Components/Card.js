@@ -51,7 +51,7 @@ const Card = ({id, name, img, types}) => {
     }else{
       let color1 = typeColor(`${types[0].type.name}`)
       let color2 = typeColor(`${types[1].type.name}`)
-      return `linear-gradient(45deg, ${color1}, ${color2})`
+      return `linear-gradient(90deg, ${color1}, ${color2})`
     }
   }
 

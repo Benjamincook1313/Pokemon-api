@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
+import CardBack from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/pokemon card.jpeg'
 
 const Card = ({id, name, img, types}) => {
+
+  const { showCard, setShowCard } = useState(true)
 
   const typeColor = (str) => {
     switch(str){
@@ -56,17 +59,24 @@ const Card = ({id, name, img, types}) => {
   }
 
   return (
-    <div className='Card' style={{background: `${getColors()}`}}>
-      <p>#0{id}</p>
-      <div className='img-container'>
-        <img className='poke-img' src={img} alt={name} />
-      </div>
-      <h2>{name.charAt(0).toUpperCase() + name.slice(1)}</h2>
-      {types.length > 1?
-        <p>
-          Type: {`${types[0].type.name}/${types[1].type.name}`}
-        </p>
-        :<p>Type: {types[0].type.name}</p>
+    <div className='Card' style={{background: `${getColors()}`}} onClick={setShowCard(false)}>
+      {!showCard? 
+        <div>
+          <p>#0{id}</p>
+          <div className='img-container'>
+            <img className='poke-img' src={img} alt={name} />
+          </div>
+          <h2>{name.charAt(0).toUpperCase() + name.slice(1)}</h2>
+          {types.length > 1?
+            <p>
+              Type: {`${types[0].type.name}/${types[1].type.name}`}
+            </p>
+            :<p>Type: {types[0].type.name}</p>
+          }
+        </div>: 
+        <div>
+          <img src={CardBack} alt='Pokemon Card'/>
+        </div>
       }
     </div>
   )

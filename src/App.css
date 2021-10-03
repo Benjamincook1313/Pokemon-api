@@ -20,11 +20,16 @@
   justify-content: space-between;
   height: 350px;
   width: 250px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   padding: 10px 20px;
   border-radius: 4px;
   border: 2px solid black;
   object-fit: contain;
+}
+.card-back{
+  position: relative;
+  bottom: 22px;
+  right: 29px;
 }
 .img-container{
   display: flex;

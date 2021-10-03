@@ -3,7 +3,7 @@ import CardBack from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/p
 
 const Card = ({id, name, img, types}) => {
 
-  const { showCard, setShowCard } = useState(true)
+  const [showCard, setShowCard] = useState(true)
 
   const typeColor = (str) => {
     switch(str){
@@ -56,12 +56,16 @@ const Card = ({id, name, img, types}) => {
       let color2 = typeColor(`${types[1].type.name}`)
       return `linear-gradient(90deg, ${color1}, ${color2})`
     }
-  }
+  };
+
+  const handleFlip = () => {
+    setShowCard(false)
+  };
 
   return (
-    <div className='Card' style={{background: `${getColors()}`}} onClick={setShowCard(false)}>
-      {!showCard? 
-        <div>
+    <div className='Card' style={{background: `${getColors()}`}} onClick={handleFlip}>
+      {showCard? 
+        <div className='card-info'>
           <p>#0{id}</p>
           <div className='img-container'>
             <img className='poke-img' src={img} alt={name} />
@@ -75,7 +79,8 @@ const Card = ({id, name, img, types}) => {
           }
         </div>: 
         <div>
-          <img src={CardBack} alt='Pokemon Card'/>
+          {/* <h1>Pokemon Memory</h1> */}
+          <img className='card-back' src={CardBack} alt='Pokemon Card'/>
         </div>
       }
     </div>

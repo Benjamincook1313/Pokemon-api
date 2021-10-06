@@ -69,7 +69,8 @@ const Card = ({id, name, img, types, playingGame}) => {
     }
   };
 
-  const handleFlip = () => {
+
+  const handleFlip = async (id) => {
     setShowCard(!showCard)
     if(!startGame){
       setStartGame(true)
@@ -77,7 +78,7 @@ const Card = ({id, name, img, types, playingGame}) => {
   };
 
   return (
-    <div className='Card' style={{background: `${getColors()}`}} onClick={handleFlip}>
+    <div className='Card' style={{background: `${getColors()}`}} onClick={() => handleFlip(id)}>
       {showCard? 
         <div className='card-info'>
           <p>#0{id}</p>

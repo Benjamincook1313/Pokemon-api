@@ -16,7 +16,11 @@ export default class App extends Component {
       loaded: false,
       search: '',
       selectedGen: 'Select Generation',
-      playingGame: false
+      playingGame: false,
+      card1: '',
+      card2: '',
+      player1: [],
+      player2: []
     }
 
     this.getPokemon = async () => {
@@ -53,13 +57,6 @@ export default class App extends Component {
     }
     console.log('component mounted')
   };
-
-  componentDidUpdate(){
-    if(!this.loaded && this.playGame){
-      // playGame()
-    }
-    console.log('component updated')
-  }
 
   render() {
     const { allPokemon, loaded, selectedGen, playingGame} = this.state
@@ -115,12 +112,6 @@ export default class App extends Component {
         loaded: false
       })
 
-      // if(playingGame){
-      //   this.setState({
-      //     allPokemon: [...allPokemon, ...allPokemon]
-      //   })
-      // }
-
       this.getPokemon()
     };
 
@@ -132,6 +123,18 @@ export default class App extends Component {
         allPokemon: [...allPokemon, ...allPokemon]
       })
     };
+
+    // checks cards selected for match if they do match send player the match 
+
+    // const checker = () => {
+    //   if(card1 === card2){
+    //     this.setState([...matches, card1[0]])
+        
+    //     for(let i=0; i <=allPokemon.length; i++){
+
+    //     }
+    //   }
+    // };
 
     const stopGame = async () => {
       await this.setState({
@@ -163,12 +166,7 @@ export default class App extends Component {
           {/* : null} */}
           <Button variant='dark' onClick={shuffle}>Shuffle</Button>
 
-          {playingGame? 
-            <DropdownButton id="dropdown-basic-button" title={playingGame && (selectedGen === 'Select Generation')? 'Game Size': selectedGen} variant='dark'>
-              {/* <Dropdown.Item href="#/action-1" onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=40&offset=151', `${allPokemon.length}`])}>60</Dropdown.Item> */}
-              {/* <Dropdown.Item href="#/action-2" onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=60&offset=251', `${allPokemon.length}`])}>80</Dropdown.Item> */}
-              <Dropdown.Item href="#/action-3" onClick={() => getGroup([`https://pokeapi.co/api/v2/pokemon?limit=80&offset=${Math.floor(Math.random() * 386)}`, `${allPokemon.length}`])}>80</Dropdown.Item>
-            </DropdownButton>:
+          {playingGame? null:
             <DropdownButton id="dropdown-basic-button" title={selectedGen} variant='dark'>
               <Dropdown.Item href="#/action-1" onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=151', 'Gen 1'])}>Gen 1</Dropdown.Item>
               <Dropdown.Item href="#/action-2" onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=100&offset=151', 'Gen 2'])}>Gen 2</Dropdown.Item>
@@ -176,11 +174,11 @@ export default class App extends Component {
             </DropdownButton>
           }
 
-          {playingGame? 
+          {/* {playingGame? 
             <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
             :
             <Button variant='dark' onClick={playGame}>Play Memory</Button>
-          }
+          } */}
         </div>
         <div className='card-wrapper'>
           {loaded? allPokemon.map((pokemon, i) => (

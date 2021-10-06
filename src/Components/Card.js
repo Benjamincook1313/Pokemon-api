@@ -10,6 +10,10 @@ const Card = ({id, name, img, types, playingGame}) => {
     if(playingGame && !startGame){
       setShowCard(false)
     }
+    if(!playingGame){
+      setShowCard(true)
+      setStartGame(false)
+    }
   }, [playingGame, startGame])
 
   const typeColor = (str) => {

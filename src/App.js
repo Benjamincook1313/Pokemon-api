@@ -37,7 +37,7 @@ export default class App extends Component {
         })
         this.setState({loaded: true})
       }
-      axios.get('https://pokeapi.co/api/v2/pokemon/54').then(res =>{
+      axios.get('https://pokeapi.co/api/v2/pokemon/weedle').then(res =>{
         console.log(res.data)
       })
 
@@ -47,18 +47,26 @@ export default class App extends Component {
 
   };
   
-  async componentDidMount() {
-
-    this.getPokemon()
-
+  componentDidMount() {
+    if(!this.loaded){
+      this.getPokemon()
+    }
+    console.log('component mounted')
   };
+
+  componentDidUpdate(){
+    if(!this.loaded && this.playGame){
+      // playGame()
+    }
+    console.log('component updated')
+  }
 
   render() {
     const { allPokemon, loaded, selectedGen, playingGame} = this.state
 
-    const handleChange = (value) => {
-      this.setState({search: value})
-    };
+    // const handleChange = (value) => {
+    //   this.setState({search: value})
+    // };
 
     // sorts pokemon cards A - Z
 
@@ -99,39 +107,42 @@ export default class App extends Component {
 
     // get pokemon by generations 1 2 3 
 
-    const getGen = async (newUrl) => {
+    const getGroup = async (newUrl) => {
       await this.setState({
         url: newUrl[0], 
         allPokemon: [],
-        selectedGen: newUrl[1]
+        selectedGen: newUrl[1],
+        loaded: false
       })
+
+      // if(playingGame){
+      //   this.setState({
+      //     allPokemon: [...allPokemon, ...allPokemon]
+      //   })
+      // }
+
       this.getPokemon()
     };
 
     // Memory matching game 
 
-    const memoryGame = () => {
-      const match = allPokemon.map
-      if(selectedGen !== 'Select Generation'){
-        this.setState({
-          playingGame: true,
-          allPokemon: [...allPokemon, match]
-        })
-        shuffle()
-      }else{
-        Swal.fire({
-          title: 'Select a Generation before playing',
-          timer: 3000,
-          icon: 'info',
-          showConfirmButton: false
-        })
-      }
+    const playGame = () => {
+      this.setState({
+        playingGame: true,
+        allPokemon: [...allPokemon, ...allPokemon]
+      })
     };
 
-    const stopGame = () => {
-      
-    }
+    const stopGame = async () => {
+      await this.setState({
+        playingGame: false,
+        url: 'https://pokeapi.co/api/v2/pokemon',
+        allPokemon: [],
+        selectedGen: 'Select Generation'
+      });
 
+      this.getPokemon()
+    }
 
     return (
       <div className='App'>
@@ -143,17 +154,32 @@ export default class App extends Component {
           </InputGroup> */}
         </div>
         <div className='sort-btns'>
-          {!playingGame? <Button variant='dark' onClick={sortByNum}>Sort By #</Button>: null}
-          {!playingGame? <Button variant='dark' onClick={aToZ}>Sort A-Z</Button>: null}
+
+          {/* {!playingGame?  */}
+            <Button variant='dark' onClick={sortByNum}>Sort By #</Button>
+          {/* : null} */}
+          {/* {!playingGame?  */}
+            <Button variant='dark' onClick={aToZ}>Sort A-Z</Button>
+          {/* : null} */}
           <Button variant='dark' onClick={shuffle}>Shuffle</Button>
-          <DropdownButton id="dropdown-basic-button" title={selectedGen} variant='dark'>
-            <Dropdown.Item href="#/action-1" onClick={() => getGen(['https://pokeapi.co/api/v2/pokemon?limit=151', 'Gen 1'])}>Gen 1</Dropdown.Item>
-            <Dropdown.Item href="#/action-2" onClick={() => getGen(['https://pokeapi.co/api/v2/pokemon?limit=100&offset=151', 'Gen 2'])}>Gen 2</Dropdown.Item>
-            <Dropdown.Item href="#/action-3" onClick={() => getGen(['https://pokeapi.co/api/v2/pokemon?limit=135&offset=251', 'Gen 3'])}>Gen 3</Dropdown.Item>
-          </DropdownButton>
+
           {playingGame? 
-            <Button variant='dark' onClick={stopGame}>Stop Playing</Button>:
-            <Button variant='dark' onClick={memoryGame}>Play Memory</Button>
+            <DropdownButton id="dropdown-basic-button" title={playingGame && (selectedGen === 'Select Generation')? 'Game Size': selectedGen} variant='dark'>
+              {/* <Dropdown.Item href="#/action-1" onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=40&offset=151', `${allPokemon.length}`])}>60</Dropdown.Item> */}
+              {/* <Dropdown.Item href="#/action-2" onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=60&offset=251', `${allPokemon.length}`])}>80</Dropdown.Item> */}
+              <Dropdown.Item href="#/action-3" onClick={() => getGroup([`https://pokeapi.co/api/v2/pokemon?limit=80&offset=${Math.floor(Math.random() * 386)}`, `${allPokemon.length}`])}>80</Dropdown.Item>
+            </DropdownButton>:
+            <DropdownButton id="dropdown-basic-button" title={selectedGen} variant='dark'>
+              <Dropdown.Item href="#/action-1" onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=151', 'Gen 1'])}>Gen 1</Dropdown.Item>
+              <Dropdown.Item href="#/action-2" onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=100&offset=151', 'Gen 2'])}>Gen 2</Dropdown.Item>
+              <Dropdown.Item href="#/action-3" onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=135&offset=251', 'Gen 3'])}>Gen 3</Dropdown.Item>
+            </DropdownButton>
+          }
+
+          {playingGame? 
+            <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
+            :
+            <Button variant='dark' onClick={playGame}>Play Memory</Button>
           }
         </div>
         <div className='card-wrapper'>
@@ -170,7 +196,10 @@ export default class App extends Component {
             :'...loading'
           }
         </div>
-        <Button variant='secondary' onClick={this.getPokemon}>Get More Pokemon</Button>
+        {playingGame?
+          null:
+          <Button variant='secondary' onClick={this.getPokemon}>Get More Pokemon</Button>
+        }
       </div>
     )
   };

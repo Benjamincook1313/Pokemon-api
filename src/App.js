@@ -4,7 +4,8 @@ import './App.css'
 import Card from './Components/Card'
 import { Button, InputGroup, FormControl, DropdownButton, Dropdown } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import Swal from 'sweetalert2'
+// import Swal from 'sweetalert2'
+// import { connect } from 'react-redux'
 
 export default class App extends Component {
   constructor(props){
@@ -59,11 +60,18 @@ export default class App extends Component {
   };
 
   render() {
-    const { allPokemon, loaded, selectedGen, playingGame} = this.state
+    const { allPokemon, loaded, selectedGen, playingGame, search} = this.state
 
-    // const handleChange = (value) => {
-    //   this.setState({search: value})
-    // };
+    const handleChange = (value) => {
+      this.setState({search: value})
+    };
+
+    const searchPokemon = () => {
+      this.setState({
+        url: `https://pokeapi.co/api/v2/pokemon/${search}`
+      })
+      this.getPokemon()
+    };
 
     // sorts pokemon cards A - Z
 
@@ -117,12 +125,12 @@ export default class App extends Component {
 
     // Memory matching game 
 
-    const playGame = () => {
-      this.setState({
-        playingGame: true,
-        allPokemon: [...allPokemon, ...allPokemon]
-      })
-    };
+    // const playGame = () => {
+    //   this.setState({
+    //     playingGame: true,
+    //     allPokemon: [...allPokemon, ...allPokemon]
+    //   })
+    // };
 
     // checks cards selected for match if they do match send player the match 
 
@@ -136,25 +144,25 @@ export default class App extends Component {
     //   }
     // };
 
-    const stopGame = async () => {
-      await this.setState({
-        playingGame: false,
-        url: 'https://pokeapi.co/api/v2/pokemon',
-        allPokemon: [],
-        selectedGen: 'Select Generation'
-      });
+    // const stopGame = async () => {
+    //   await this.setState({
+    //     playingGame: false,
+    //     url: 'https://pokeapi.co/api/v2/pokemon',
+    //     allPokemon: [],
+    //     selectedGen: 'Select Generation'
+    //   });
 
-      this.getPokemon()
-    }
+    //   this.getPokemon()
+    // }
 
     return (
       <div className='App'>
         <h1>Welcome, Pokemon Trainer!</h1>
         <div className='srch'>
-          {/* <InputGroup className="mb-3">
+          <InputGroup className="mb-3">
             <FormControl placeholder="Search" aria-label="Search Pokemon" aria-describedby="basic-addon2" onChange={handleChange}/>
-            <Button variant="outline-secondary" id="button-addon2">search</Button>
-          </InputGroup> */}
+            <Button variant="outline-secondary" id="button-addon2" onClick={searchPokemon()}>search</Button>
+          </InputGroup>
         </div>
         <div className='sort-btns'>
 
@@ -204,4 +212,8 @@ export default class App extends Component {
 };
 
 
+// function mapStateToProps(reduxState) {
+//   return reduxState
+// }
 
+// export default connect(mapStateToProps, {})(App);

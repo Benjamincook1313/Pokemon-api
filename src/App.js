@@ -42,35 +42,34 @@ export default class App extends Component {
         })
         this.setState({loaded: true})
       }
-      axios.get('https://pokeapi.co/api/v2/pokemon/weedle').then(res =>{
+      axios.get('https://pokeapi.co/api/v2/pokemon/weedle').then(res => {
         console.log(res.data)
       })
 
-      getEachPokemon(data.results)
-
+        getEachPokemon(data.results)
     };
-
   };
-  
-  componentDidMount() {
+
+  componentDidMount(){
     if(!this.loaded){
       this.getPokemon()
     }
-    console.log('component mounted')
   };
 
   render() {
-    const { allPokemon, loaded, selectedGen, playingGame, search} = this.state
+    const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, matches} = this.state
 
     const handleChange = (value) => {
       this.setState({search: value})
     };
 
-    const searchPokemon = () => {
+    const searchPokemon = async () => {
       this.setState({
-        url: `https://pokeapi.co/api/v2/pokemon/${search}`
+        url: `https://pokeapi.co/api/v2/pokemon/${search}`,
+        loading: false
       })
-      this.getPokemon()
+      await this.getPokemon()
+      console.log(allPokemon, 'hit')
     };
 
     // sorts pokemon cards A - Z
@@ -125,12 +124,12 @@ export default class App extends Component {
 
     // Memory matching game 
 
-    // const playGame = () => {
-    //   this.setState({
-    //     playingGame: true,
-    //     allPokemon: [...allPokemon, ...allPokemon]
-    //   })
-    // };
+    const playGame = () => {
+      this.setState({
+        playingGame: true,
+        allPokemon: [...allPokemon, ...allPokemon]
+      })
+    };
 
     // checks cards selected for match if they do match send player the match 
 
@@ -144,31 +143,35 @@ export default class App extends Component {
     //   }
     // };
 
-    // const stopGame = async () => {
-    //   await this.setState({
-    //     playingGame: false,
-    //     url: 'https://pokeapi.co/api/v2/pokemon',
-    //     allPokemon: [],
-    //     selectedGen: 'Select Generation'
-    //   });
+    const stopGame = async () => {
+      await this.setState({
+        playingGame: false,
+        url: 'https://pokeapi.co/api/v2/pokemon',
+        allPokemon: [],
+        selectedGen: 'Select Generation'
+      });
 
-    //   this.getPokemon()
-    // }
+      this.getPokemon()
+    };
+
+    const handleSelectedCard = (i) => {
+
+    }
 
     return (
       <div className='App'>
         <h1>Welcome, Pokemon Trainer!</h1>
         <div className='srch'>
-          <InputGroup className="mb-3">
-            <FormControl placeholder="Search" aria-label="Search Pokemon" aria-describedby="basic-addon2" onChange={handleChange}/>
-            <Button variant="outline-secondary" id="button-addon2" onClick={searchPokemon()}>search</Button>
-          </InputGroup>
+          {/* <InputGroup className="mb-3">
+            <FormControl placeholder="Search" aria-label="Search Pokemon" aria-describedby="basic-addon2" onChange={e => handleChange(e.target.value)}/>
+            <Button variant="outline-secondary" id="button-addon2" onClick={searchPokemon}>search</Button>
+          </InputGroup> */}
         </div>
         <div className='sort-btns'>
 
           {/* {!playingGame?  */}
             <Button variant='dark' onClick={sortByNum}>Sort By #</Button>
-          {/* : null} */}
+          {/* // : null} */}
           {/* {!playingGame?  */}
             <Button variant='dark' onClick={aToZ}>Sort A-Z</Button>
           {/* : null} */}
@@ -182,11 +185,11 @@ export default class App extends Component {
             </DropdownButton>
           }
 
-          {/* {playingGame? 
+          {playingGame? 
             <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
             :
             <Button variant='dark' onClick={playGame}>Play Memory</Button>
-          } */}
+          }
         </div>
         <div className='card-wrapper'>
           {loaded? allPokemon.map((pokemon, i) => (

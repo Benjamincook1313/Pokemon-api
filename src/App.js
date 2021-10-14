@@ -58,7 +58,7 @@ export default class App extends Component {
   };
 
   render() {
-    const { allPokemon, loaded, selectedGen, playingGame, search, card1, player1, player2, player} = this.state
+    const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player} = this.state
 
     const handleChange = (value) => {
       this.setState({search: value})
@@ -162,24 +162,23 @@ export default class App extends Component {
 
     };
 
-    const selectedCard = (name, i) => {
+    const checkCard = (name, i) => {
       // console.log(name, i)
       if(!card1){
         this.setState({
           card1: [i, name]
         })
       }else{
-        if(card1[1] === name){ 
-          this.setState({card1: ''}) 
-          alert(`Player ${player} gets another turn`)
+        if(card1[1] === name && i !== card1[0]){ 
+          // this.setState({card1: ''}) 
+          
+          setTimeout(alert(`Player ${player} gets another turn`), 5000)
         }else{ 
         updatePlayer()
         resetCards(i, card1[0])
         }
       }
     };
-
-    console.log(allPokemon[1])
 
     return (
       <div className='App'>
@@ -220,12 +219,15 @@ export default class App extends Component {
           {loaded? allPokemon.map((pokemon, i) => (
             <Card 
               key={i}
+              i={i}
               id={pokemon.id}
               name={pokemon.name}
               img={pokemon.sprites.other.dream_world.front_default}
               types={pokemon.types}
               playingGame={playingGame}
-              selectedCard={() => selectedCard(pokemon.name, i)}
+              checkCard={() => checkCard(pokemon.name, i)}
+              card1={card1}
+              card2={card2}
             />
             ))
             :'...loading'

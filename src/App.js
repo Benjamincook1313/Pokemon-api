@@ -4,7 +4,7 @@ import './App.css'
 import Card from './Components/Card'
 import { Button, InputGroup, FormControl, DropdownButton, Dropdown } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
-// import Swal from 'sweetalert2'
+import Swal from 'sweetalert2'
 // import { connect } from 'react-redux'
 
 export default class App extends Component {
@@ -21,7 +21,8 @@ export default class App extends Component {
       card1: '',
       card2: '',
       player1: [],
-      player2: []
+      player2: [],
+      player: 1
     }
 
     this.getPokemon = async () => {
@@ -57,7 +58,7 @@ export default class App extends Component {
   };
 
   render() {
-    const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, matches} = this.state
+    const { allPokemon, loaded, selectedGen, playingGame, search, card1, player1, player2, player} = this.state
 
     const handleChange = (value) => {
       this.setState({search: value})
@@ -131,36 +132,60 @@ export default class App extends Component {
       })
     };
 
-    // checks cards selected for match if they do match send player the match 
-
-    // const checker = () => {
-    //   if(card1 === card2){
-    //     this.setState([...matches, card1[0]])
-        
-    //     for(let i=0; i <=allPokemon.length; i++){
-
-    //     }
-    //   }
-    // };
-
     const stopGame = async () => {
       await this.setState({
         playingGame: false,
         url: 'https://pokeapi.co/api/v2/pokemon',
         allPokemon: [],
-        selectedGen: 'Select Generation'
+        selectedGen: 'Select Generation',
+        card1: ''
       });
 
       this.getPokemon()
     };
 
-    const handleSelectedCard = (i) => {
+    const updatePlayer = () => {
+      if(player === 1){
+        this.setState({
+          player: 2,
+          card1: ''
+        })
+      }else{
+        this.setState({
+          player: 1,
+          card1: ''
+        })
+      }
+    };
 
-    }
+    const resetCards = (index1, index2) => {
+
+    };
+
+    const selectedCard = (name, i) => {
+      // console.log(name, i)
+      if(!card1){
+        this.setState({
+          card1: [i, name]
+        })
+      }else{
+        if(card1[1] === name){ 
+          this.setState({card1: ''}) 
+          alert(`Player ${player} gets another turn`)
+        }else{ 
+        updatePlayer()
+        resetCards(i, card1[0])
+        }
+      }
+    };
+
+    console.log(allPokemon[1])
 
     return (
       <div className='App'>
         <h1>Welcome, Pokemon Trainer!</h1>
+        <p>{card1}</p>
+        {playingGame? <h3>Player {player}'s turn</h3>: null}
         <div className='srch'>
           {/* <InputGroup className="mb-3">
             <FormControl placeholder="Search" aria-label="Search Pokemon" aria-describedby="basic-addon2" onChange={e => handleChange(e.target.value)}/>
@@ -200,6 +225,7 @@ export default class App extends Component {
               img={pokemon.sprites.other.dream_world.front_default}
               types={pokemon.types}
               playingGame={playingGame}
+              selectedCard={() => selectedCard(pokemon.name, i)}
             />
             ))
             :'...loading'

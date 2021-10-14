@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import CardBack from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/pokemon card.jpeg'
 
-const Card = ({ id, name, img, types, playingGame}) => {
+const Card = ({ id, name, img, types, playingGame, selectedCard}) => {
 
   const [showCard, setShowCard] = useState(true)
   const [startGame, setStartGame] = useState(false)
@@ -14,6 +14,7 @@ const Card = ({ id, name, img, types, playingGame}) => {
       setShowCard(true)
       setStartGame(false)
     }
+    
   }, [playingGame, startGame])
 
   const typeColor = (str) => {
@@ -70,16 +71,16 @@ const Card = ({ id, name, img, types, playingGame}) => {
   };
 
 
-  const selectCard = async (id) => {
-    console.log(id)
+  const selectCard = () => {
     setShowCard(!showCard)
     if(!startGame){
       setStartGame(true)
     }
+    selectedCard()
   };
 
   return (
-    <div className='Card' style={{background: `${getColors()}`}} onClick={() => selectCard()}>
+    <div className='Card' style={{background: `${getColors()}`}} onClick={selectCard}>
       {showCard? 
         <div className='card-info'>
           <p>#0{id}</p>

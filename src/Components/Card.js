@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import CardBack from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/pokemon card.jpeg'
 
-const Card = ({ i, id, name, img, types, playingGame, checkCard, card1, card2}) => {
+const Card = ({ i, id, name, img, types, playingGame, checkCard, card1, card2, flipCards}) => {
 
   const [showCard, setShowCard] = useState(true)
   const [startGame, setStartGame] = useState(false)
@@ -14,10 +14,14 @@ const Card = ({ i, id, name, img, types, playingGame, checkCard, card1, card2}) 
       setShowCard(true)
       setStartGame(false)
     }
-    if(card1[0] === i && card1[1] !== card2[1]){
+    if(card1[0] === i && flipCards){
+      setShowCard(false)
+      console.log('hit')
+    }
+    if(card2[0] === i && flipCards){
       setShowCard(false)
     }
-  }, [playingGame, startGame])
+  }, [playingGame, startGame, flipCards, card1, card2, i])
 
   const typeColor = (str) => {
     switch(str){

@@ -22,7 +22,8 @@ export default class App extends Component {
       card2: '',
       player1: [],
       player2: [],
-      player: 1
+      player: 1,
+      flipCards: false
     }
 
     this.getPokemon = async () => {
@@ -58,7 +59,7 @@ export default class App extends Component {
   };
 
   render() {
-    const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player} = this.state
+    const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player, flipCards} = this.state
 
     const handleChange = (value) => {
       this.setState({search: value})
@@ -138,7 +139,11 @@ export default class App extends Component {
         url: 'https://pokeapi.co/api/v2/pokemon',
         allPokemon: [],
         selectedGen: 'Select Generation',
-        card1: ''
+        card1: '',
+        card2: '',
+        player: 1,
+        player1: [],
+        player2: []
       });
 
       this.getPokemon()
@@ -158,33 +163,62 @@ export default class App extends Component {
       }
     };
 
-    const resetCards = (index1, index2) => {
+    
 
-    };
+    const handleCard = (name, i) => {
+      this.setState({flipCards: false})
+      
+      let resetCards = () => {
+        if(card1[1] === name && i !== card1[0]){ 
+          alert(`Player ${player} gets another turn`)
+          if(player == 1){
+            this.setState({player1: [...player1, name]})
+          }
+          if(player == 2){
+            this.setState({player2: [...player2, name]})
+          }
+        }else{
+          // setTimeout(() => {
+            alert('Not A Match')
+            this.setState({flipCards: true})
+            updatePlayer()
+          // }, 2000)
+        }
+        this.setState({
+          card1: '',
+          card2: ''
+        })
+      }
 
-    const checkCard = (name, i) => {
-      // console.log(name, i)
-      if(!card1){
+      if(card1 === ''){
         this.setState({
           card1: [i, name]
         })
       }else{
-        if(card1[1] === name && i !== card1[0]){ 
-          // this.setState({card1: ''}) 
-          
-          setTimeout(alert(`Player ${player} gets another turn`), 5000)
-        }else{ 
-        updatePlayer()
-        resetCards(i, card1[0])
-        }
+        this.setState({
+          card2: [i, name]
+        })
+        setTimeout(() => {
+          resetCards(name, i)
+        }, 100);
       }
     };
 
+    // console.log()
     return (
       <div className='App'>
         <h1>Welcome, Pokemon Trainer!</h1>
         <p>{card1}</p>
-        {playingGame? <h3>Player {player}'s turn</h3>: null}
+        <p>{card2}</p>
+        {playingGame? 
+        <div className='player-wrapper'>
+          <h5>Player1</h5>
+          <p>{player1.map(name => <p>{name},</p>)}</p>
+          <h2>Player {player}'s turn</h2>
+          <h5>Player2</h5>
+          <p>{player2.map(name => <p>{name},</p>)}</p>
+        </div>
+        : null}
         <div className='srch'>
           {/* <InputGroup className="mb-3">
             <FormControl placeholder="Search" aria-label="Search Pokemon" aria-describedby="basic-addon2" onChange={e => handleChange(e.target.value)}/>
@@ -225,9 +259,10 @@ export default class App extends Component {
               img={pokemon.sprites.other.dream_world.front_default}
               types={pokemon.types}
               playingGame={playingGame}
-              checkCard={() => checkCard(pokemon.name, i)}
+              checkCard={() => handleCard(pokemon.name, i)}
               card1={card1}
               card2={card2}
+              flipCards={flipCards}
             />
             ))
             :'...loading'

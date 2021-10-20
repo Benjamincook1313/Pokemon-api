@@ -5,6 +5,9 @@ import Card from './Components/Card'
 import { Button, InputGroup, FormControl, DropdownButton, Dropdown } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Swal from 'sweetalert2'
+import Success from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/branden-skeli-bRojCEo0uow-unsplash.jpg'
+import Failure from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/lia-xKRv2abDDeg-unsplash.jpg'
+import Pokeball from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/pokeball-png-45332 (1).png'
 // import { connect } from 'react-redux'
 
 export default class App extends Component {
@@ -168,21 +171,31 @@ export default class App extends Component {
     const handleCard = (name, i) => {
       this.setState({flipCards: false})
       
-      let resetCards = () => {
+      let resetCards = async () => {
         if(card1[1] === name && i !== card1[0]){ 
-          alert(`Player ${player} gets another turn`)
-          if(player == 1){
+          Swal.fire({
+            icon: 'success',
+            title: 'Cards Match',
+            text: `Player ${player} gets another turn!`,
+            imageHeight: 250,
+            imageUrl: `${Success}`
+          })
+          if(player === 1){
             this.setState({player1: [...player1, name]})
           }
-          if(player == 2){
+          if(player === 2){
             this.setState({player2: [...player2, name]})
           }
         }else{
-          // setTimeout(() => {
-            alert('Not A Match')
+          await Swal.fire({
+            icon: 'error',
+            title: "Cards Don't Match",
+            text: `Player ${player === 1? '2': '1'} gets a turn!`,
+            imageHeight: 250,
+            imageUrl: `${Failure}`
+          })
             this.setState({flipCards: true})
             updatePlayer()
-          // }, 2000)
         }
         this.setState({
           card1: '',
@@ -207,16 +220,22 @@ export default class App extends Component {
     // console.log()
     return (
       <div className='App'>
-        <h1>Welcome, Pokemon Trainer!</h1>
-        <p>{card1}</p>
-        <p>{card2}</p>
+        <div className='title'>
+          <img className='pokeball' src={Pokeball} />
+          <h1>Welcome, Pokemon Trainer!</h1>
+          <img className='pokeball' src={Pokeball} />
+        </div>
         {playingGame? 
         <div className='player-wrapper'>
-          <h5>Player1</h5>
-          <p>{player1.map(name => <p>{name},</p>)}</p>
-          <h2>Player {player}'s turn</h2>
-          <h5>Player2</h5>
-          <p>{player2.map(name => <p>{name},</p>)}</p>
+          <div className='score'>
+            <h5>Player1:</h5>
+            <ul className='matches'>{player1.map((name, i) => <li className='matches-item' key={i}>{name}</li>)}</ul>
+          </div>
+          <h2>Player {player}</h2>
+          <div className='score'>
+            <h5>Player2:</h5>
+            <ul className='matches'>{player2.map((name, i) => <li className='matches-item' key={i}>{name}</li>)}</ul>
+          </div>
         </div>
         : null}
         <div className='srch'>

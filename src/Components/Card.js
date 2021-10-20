@@ -78,32 +78,32 @@ const Card = ({ i, id, name, img, types, playingGame, checkCard, card1, card2, f
 
 
   const selectCard = () => {
-    setShowCard(!showCard)
     if(!startGame){
       setStartGame(true)
     }
-    checkCard()
+    if(!showCard){
+      setShowCard(true)
+      checkCard()
+    }
   };
 
   return (
-    <div className='Card' style={{background: `${getColors()}`}} onClick={selectCard}>
+    <div className={`${playingGame? 'Card small': 'Card'}`} style={{background: `${getColors()}`}} onClick={selectCard}>
       {showCard? 
         <div className='card-info'>
-          <p>#0{id}</p>
+          <p style={{margin: '0px'}}>#0{id}</p>
           <div className='img-container'>
             <img className='poke-img' src={img} alt={name} />
           </div>
-          <h2>{name.charAt(0).toUpperCase() + name.slice(1)}</h2>
-          {types.length > 1?
-            <p>
-              Type: {`${types[0].type.name}/${types[1].type.name}`}
-            </p>
-            :<p>Type: {types[0].type.name}</p>
-          }
+          <h2 className={playingGame? 'card-small': 'card-name'}>{name.charAt(0).toUpperCase() + name.slice(1)}</h2>
+            {types.length > 1?
+              <p>type: {`${types[0].type.name}/${types[1].type.name}`}</p>:
+              <p>type: {types[0].type.name}</p>
+            }
         </div>: 
         <div>
           {/* <h1>Pokemon Memory</h1> */}
-          <img className='card-back' src={CardBack} alt='Pokemon Card'/>
+          <img className='card-back small' src={CardBack} alt='Pokemon Card'/>
         </div>
       }
     </div>

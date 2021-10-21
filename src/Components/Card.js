@@ -16,7 +16,6 @@ const Card = ({ i, id, name, img, types, playingGame, checkCard, card1, card2, f
     }
     if(card1[0] === i && flipCards){
       setShowCard(false)
-      console.log('hit')
     }
     if(card2[0] === i && flipCards){
       setShowCard(false)
@@ -97,8 +96,8 @@ const Card = ({ i, id, name, img, types, playingGame, checkCard, card1, card2, f
           </div>
           <h2 className={playingGame? 'card-small': 'card-name'}>{name.charAt(0).toUpperCase() + name.slice(1)}</h2>
             {types.length > 1?
-              <p>type: {`${types[0].type.name}/${types[1].type.name}`}</p>:
-              <p>type: {types[0].type.name}</p>
+              <p style={{margin: '0px'}}>type: {`${types[0].type.name} / ${types[1].type.name}`}</p>:
+              <p style={{margin: '0px'}}>type: {types[0].type.name}</p>
             }
         </div>: 
         <div>

@@ -47,9 +47,6 @@ export default class App extends Component {
         })
         this.setState({loaded: true})
       }
-      axios.get('https://pokeapi.co/api/v2/pokemon/weedle').then(res => {
-        console.log(res.data)
-      })
 
         getEachPokemon(data.results)
     };
@@ -62,7 +59,7 @@ export default class App extends Component {
   };
 
   render() {
-    const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player, flipCards} = this.state
+    const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player, flipCards, url} = this.state
 
     const handleChange = (value) => {
       this.setState({search: value})
@@ -127,13 +124,30 @@ export default class App extends Component {
       this.getPokemon()
     };
 
-    // Memory matching game 
-
-    const playGame = () => {
+    const resetGame = () => {
+      console.log(url)
+      this.getPokemon()
       this.setState({
         playingGame: true,
         allPokemon: [...allPokemon, ...allPokemon]
       })
+      console.log('hit', `${Math.floor(Math.random() * 328)}, ${url}`)
+    };
+
+    // Memory matching game 
+
+    const playGame = () => {
+      if(allPokemon.length > 2){
+        this.setState({
+          url: `https://pokeapi.co/api/v2/pokemon?limit=25&offset=${Math.floor(Math.random() * 328)}`
+        }, resetGame())
+      }else{
+        this.setState({
+          playingGame: true,
+          allPokemon: [...allPokemon, ...allPokemon]
+        }, shuffle())
+      }
+      // shuffle()
     };
 
     const stopGame = async () => {
@@ -245,14 +259,9 @@ export default class App extends Component {
           </InputGroup> */}
         </div>
         <div className='sort-btns'>
-
-          {/* {!playingGame?  */}
-            <Button variant='dark' onClick={sortByNum}>Sort By #</Button>
-          {/* // : null} */}
-          {/* {!playingGame?  */}
-            <Button variant='dark' onClick={aToZ}>Sort A-Z</Button>
-          {/* : null} */}
-          <Button variant='dark' onClick={shuffle}>Shuffle</Button>
+          {!playingGame? <Button variant='dark' onClick={sortByNum}>Sort By #</Button>: null} 
+          {!playingGame? <Button variant='dark' onClick={aToZ}>Sort A-Z</Button>: null} 
+          {!playingGame? <Button variant='dark' onClick={shuffle}>Shuffle</Button>: null}
 
           {playingGame? null:
             <DropdownButton id="dropdown-basic-button" title={selectedGen} variant='dark'>

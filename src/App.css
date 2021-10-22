@@ -8,6 +8,12 @@
 p{
   margin: 0px;
 }
+
+.heading{
+  font-size: 65px;
+  font-family: fantasy;
+  font-weight: bold;
+}
 .title{
   display: flex;
   flex-direction: row;

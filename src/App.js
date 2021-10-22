@@ -267,7 +267,7 @@ export default class App extends Component {
       <div className='App'>
         <div className='title'>
           <img className='pokeball' src={Pokeball} alt='pokeball' />
-          <h1>Welcome, Pokemon Trainer!</h1>
+          <h1 className='heading'>Welcome, Pokemon Trainer!</h1>
           <img className='pokeball' src={Pokeball} alt='pokeball'/>
         </div>
         {playingGame? 

@@ -8,6 +8,7 @@ import Swal from 'sweetalert2'
 import Success from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/branden-skeli-bRojCEo0uow-unsplash.jpg'
 import Failure from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/lia-xKRv2abDDeg-unsplash.jpg'
 import Pokeball from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/pokeball-png-45332 (1).png'
+import Finished from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/photo-1605979257913-1704eb7b6246.jpeg'
 // import { connect } from 'react-redux'
 
 export default class App extends Component {
@@ -15,7 +16,7 @@ export default class App extends Component {
     super(props)
 
     this.state = {
-      url: 'https://pokeapi.co/api/v2/pokemon',
+      url: 'https://pokeapi.co/api/v2/pokemon?limit=25',
       allPokemon:[],
       loaded: false,
       search: '',
@@ -52,11 +53,14 @@ export default class App extends Component {
     };
   };
 
+  
+
   componentDidMount(){
     if(!this.loaded){
       this.getPokemon()
     }
   };
+
 
   render() {
     const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player, flipCards, url} = this.state
@@ -99,7 +103,10 @@ export default class App extends Component {
     // shuffles the order of the pokemon cards
 
     const shuffle = () => {
-      let arr = [...allPokemon]
+      let arr =  [...allPokemon]
+      if(playingGame){
+        arr = [...allPokemon, ...allPokemon]
+      }
       for(let i=0; i < arr.length; i++){
         let temp = arr[i]
         let randomNum = Math.floor(Math.random() * arr.length)
@@ -124,30 +131,54 @@ export default class App extends Component {
       this.getPokemon()
     };
 
-    const resetGame = () => {
-      console.log(url)
-      this.getPokemon()
-      this.setState({
-        playingGame: true,
-        allPokemon: [...allPokemon, ...allPokemon]
-      })
-      console.log('hit', `${Math.floor(Math.random() * 328)}, ${url}`)
-    };
+    // const resetGame = () => {
+    //   this.getPokemon()
+    //   // this is where the issue is 
+    //   this.setState({
+    //     playingGame: true
+    //     // allPokemon: [...allPokemon, ...allPokemon]
+    //   }, setTimeout(() => shuffle()), 1000)
+    // };
 
     // Memory matching game 
 
     const playGame = () => {
-      if(allPokemon.length > 2){
-        this.setState({
-          url: `https://pokeapi.co/api/v2/pokemon?limit=25&offset=${Math.floor(Math.random() * 328)}`
-        }, resetGame())
-      }else{
+
+      // let newUrl = `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${Math.floor(Math.random() * 328)}`
+
+      let duplicate = () => {
         this.setState({
           playingGame: true,
           allPokemon: [...allPokemon, ...allPokemon]
         }, shuffle())
       }
-      // shuffle()
+
+      // if(selectedGen !== 'Select Generation'){
+      //   this.setState({
+      //     url: {newUrl}
+      //   }, setTimeout(() => resetGame(), 1000))
+      // }
+      // else{
+      //   duplicate()
+      //   // shuffle()
+      // }
+
+      
+      // console.log(url)
+      duplicate() 
+    };
+
+    const endGame = () => {
+      // if((player1.length + player2.length) === (allPokemon.length / 2)){
+        Swal.fire({
+          icon: 'success',
+          title: `Player ${player} Wins!`,
+          text: 'Game Over',
+          imageHeight: 250,
+          imageUrl: `${Finished}`,
+          timer: 10000
+        }, stopGame())
+      // }
     };
 
     const stopGame = async () => {
@@ -231,13 +262,13 @@ export default class App extends Component {
       }
     };
 
-    // console.log()
+    console.log()
     return (
       <div className='App'>
         <div className='title'>
-          <img className='pokeball' src={Pokeball} />
+          <img className='pokeball' src={Pokeball} alt='pokeball' />
           <h1>Welcome, Pokemon Trainer!</h1>
-          <img className='pokeball' src={Pokeball} />
+          <img className='pokeball' src={Pokeball} alt='pokeball'/>
         </div>
         {playingGame? 
         <div className='player-wrapper'>
@@ -262,6 +293,7 @@ export default class App extends Component {
           {!playingGame? <Button variant='dark' onClick={sortByNum}>Sort By #</Button>: null} 
           {!playingGame? <Button variant='dark' onClick={aToZ}>Sort A-Z</Button>: null} 
           {!playingGame? <Button variant='dark' onClick={shuffle}>Shuffle</Button>: null}
+          {/* {playingGame? <Button variant='dark' onClick={endGame}>end game</Button>: null} */}
 
           {playingGame? null:
             <DropdownButton id="dropdown-basic-button" title={selectedGen} variant='dark'>
@@ -291,6 +323,10 @@ export default class App extends Component {
               card1={card1}
               card2={card2}
               flipCards={flipCards}
+              player1={player1}
+              player2={player2}
+              endGame={endGame}
+              allPokemon={allPokemon}
             />
             ))
             :'...loading'

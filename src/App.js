@@ -61,7 +61,6 @@ export default class App extends Component {
     }
   };
 
-
   render() {
     const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player, flipCards, url} = this.state
 
@@ -142,43 +141,42 @@ export default class App extends Component {
 
     // Memory matching game 
 
-    const playGame = () => {
+    const playGame = async () => {
+      await shuffle()
+      // let newUrl = await `https://pokeapi.co/api/v2/pokemon?limit=25&offset=${Math.floor(Math.random() * 328)}`
+      // let newUrl = await `https://pokeapi.co/api/v2/pokemon?limit=25}`
 
-      // let newUrl = `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${Math.floor(Math.random() * 328)}`
 
-      let duplicate = () => {
+      let duplicate = async () => {
         this.setState({
           playingGame: true,
           allPokemon: [...allPokemon, ...allPokemon]
-        }, shuffle())
+        })
       }
-
-      // if(selectedGen !== 'Select Generation'){
-      //   this.setState({
-      //     url: {newUrl}
-      //   }, setTimeout(() => resetGame(), 1000))
-      // }
-      // else{
-      //   duplicate()
-      //   // shuffle()
-      // }
-
       
+      // if(selectedGen !== 'Select Generation'){
+        //   this.setState({
+          //     url: {newUrl}
+          //   }, setTimeout(() => resetGame(), 1000))
+          // }
+          // else{
+            //   duplicate()
+            //   // shuffle()
+            // }
+          
       // console.log(url)
       duplicate() 
     };
 
     const endGame = () => {
-      // if((player1.length + player2.length) === (allPokemon.length / 2)){
-        Swal.fire({
-          icon: 'success',
-          title: `Player ${player} Wins!`,
-          text: 'Game Over',
-          imageHeight: 250,
-          imageUrl: `${Finished}`,
-          timer: 10000
-        }, stopGame())
-      // }
+      Swal.fire({
+        icon: 'success',
+        title: `Player ${player} Wins!`,
+        text: 'Game Over',
+        imageHeight: 250,
+        imageUrl: `${Finished}`,
+        timer: 10000
+      }).then(() => stopGame())
     };
 
     const stopGame = async () => {
@@ -210,8 +208,6 @@ export default class App extends Component {
         })
       }
     };
-
-    
 
     const handleCard = (name, i) => {
       this.setState({flipCards: false})
@@ -297,9 +293,10 @@ export default class App extends Component {
 
           {playingGame? null:
             <DropdownButton id="dropdown-basic-button" title={selectedGen} variant='dark'>
-              <Dropdown.Item href="#/action-1" onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=151', 'Gen 1'])}>Gen 1</Dropdown.Item>
-              <Dropdown.Item href="#/action-2" onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=100&offset=151', 'Gen 2'])}>Gen 2</Dropdown.Item>
-              <Dropdown.Item href="#/action-3" onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=135&offset=251', 'Gen 3'])}>Gen 3</Dropdown.Item>
+              {(selectedGen !== 'Select Generation')? <Dropdown.Item onClick={stopGame}>Home</Dropdown.Item>: null}
+              <Dropdown.Item onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=151', 'Gen 1'])}>Gen 1</Dropdown.Item>
+              <Dropdown.Item onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=100&offset=151', 'Gen 2'])}>Gen 2</Dropdown.Item>
+              <Dropdown.Item onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=135&offset=251', 'Gen 3'])}>Gen 3</Dropdown.Item>
             </DropdownButton>
           }
 

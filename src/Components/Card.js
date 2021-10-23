@@ -20,10 +20,11 @@ const Card = ({ i, id, name, img, types, playingGame, checkCard, card1, card2, f
     if(card2[0] === i && flipCards){
       setShowCard(false)
     }
-    if((player1.length + player2.length) === (allPokemon.length / 2)){
+    if((player1.length + player2.length) === (allPokemon.length / 2) && playingGame){
       endGame()
+      console.log('hit')
     }
-  }, [playingGame, startGame, flipCards, card1, card2, i, player1, player2, endGame])
+  }, [playingGame, startGame, flipCards, card1, card2, i, player1, player2, endGame, allPokemon])
 
   const typeColor = (str) => {
     switch(str){

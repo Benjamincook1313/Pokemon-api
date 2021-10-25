@@ -31,7 +31,7 @@ export default class App extends Component {
     }
 
     this.getPokemon = async () => {
-      const res = await axios.get(this.state.url)
+      const res = await axios.get(this.state.url).catch(err => console.log(err, 'error'))
       const data = res.data
       
       this.setState({
@@ -40,7 +40,7 @@ export default class App extends Component {
 
       const getEachPokemon = (result) => {
         result.forEach(async pokemon => {
-          const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+          const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`).catch(err => console.log('error', err))
           const data = res.data
           await this.setState({
             allPokemon: [...this.state.allPokemon, data]
@@ -49,7 +49,21 @@ export default class App extends Component {
         this.setState({loaded: true})
       }
 
-        getEachPokemon(data.results)
+      getEachPokemon(data.results)
+    };
+
+    this.searchPokemon = async (search) => {
+      const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${search}`)
+      if(!res){
+        console.log('pokemon not found')
+      }else{
+        const data = res.data
+        await this.setState({
+          allPokemon: [...this.state.allPokemon, data]
+        })
+      }
+
+      this.setState({loaded: true})
     };
   };
 
@@ -62,19 +76,20 @@ export default class App extends Component {
   };
 
   render() {
-    const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player, flipCards, url} = this.state
+    const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player, flipCards} = this.state
 
     const handleChange = (value) => {
       this.setState({search: value})
     };
 
     const searchPokemon = async () => {
-      this.setState({
-        url: `https://pokeapi.co/api/v2/pokemon/${search}`,
-        loading: false
+      await this.setState({allPokemon: [], loaded: false})
+      const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${search}`).catch(err => console.log('error', err))
+      const data = res.data
+      await this.setState({
+        allPokemon: [...this.state.allPokemon, data]
       })
-      await this.getPokemon()
-      console.log(allPokemon, 'hit')
+      this.setState({loaded: true})
     };
 
     // sorts pokemon cards A - Z
@@ -142,29 +157,13 @@ export default class App extends Component {
     // Memory matching game 
 
     const playGame = async () => {
-      await shuffle()
-      // let newUrl = await `https://pokeapi.co/api/v2/pokemon?limit=25&offset=${Math.floor(Math.random() * 328)}`
-      // let newUrl = await `https://pokeapi.co/api/v2/pokemon?limit=25}`
-
-
-      let duplicate = async () => {
+      const duplicate = () => {
         this.setState({
           playingGame: true,
           allPokemon: [...allPokemon, ...allPokemon]
-        })
+        }, shuffle())
       }
-      
-      // if(selectedGen !== 'Select Generation'){
-        //   this.setState({
-          //     url: {newUrl}
-          //   }, setTimeout(() => resetGame(), 1000))
-          // }
-          // else{
-            //   duplicate()
-            //   // shuffle()
-            // }
-          
-      // console.log(url)
+
       duplicate() 
     };
 
@@ -280,16 +279,17 @@ export default class App extends Component {
         </div>
         : null}
         <div className='srch'>
-          {/* <InputGroup className="mb-3">
-            <FormControl placeholder="Search" aria-label="Search Pokemon" aria-describedby="basic-addon2" onChange={e => handleChange(e.target.value)}/>
-            <Button variant="outline-secondary" id="button-addon2" onClick={searchPokemon}>search</Button>
-          </InputGroup> */}
+          {!playingGame? 
+            <InputGroup className="mb-3">
+              <FormControl placeholder="Search" aria-label="Search Pokemon" aria-describedby="basic-addon2" onChange={e => handleChange(e.target.value)}/>
+              <Button variant="outline-secondary" id="button-addon2" onClick={searchPokemon}>search</Button>
+            </InputGroup>: null
+            }
         </div>
         <div className='sort-btns'>
           {!playingGame? <Button variant='dark' onClick={sortByNum}>Sort By #</Button>: null} 
           {!playingGame? <Button variant='dark' onClick={aToZ}>Sort A-Z</Button>: null} 
           {!playingGame? <Button variant='dark' onClick={shuffle}>Shuffle</Button>: null}
-          {/* {playingGame? <Button variant='dark' onClick={endGame}>end game</Button>: null} */}
 
           {playingGame? null:
             <DropdownButton id="dropdown-basic-button" title={selectedGen} variant='dark'>

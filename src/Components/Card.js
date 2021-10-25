@@ -22,7 +22,6 @@ const Card = ({ i, id, name, img, types, playingGame, checkCard, card1, card2, f
     }
     if((player1.length + player2.length) === (allPokemon.length / 2) && playingGame){
       endGame()
-      console.log('hit')
     }
   }, [playingGame, startGame, flipCards, card1, card2, i, player1, player2, endGame, allPokemon])
 

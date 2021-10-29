@@ -10,79 +10,130 @@ import Failure from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/li
 import Pokeball from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/pokeball-png-45332 (1).png'
 import Finished from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/photo-1605979257913-1704eb7b6246.jpeg'
 
-export default function App() {
+export default class App extends Component {
+  constructor(props){
+    super(props)
 
-  const [url, setUrl] = useState('https://pokeapi.co/api/v2/pokemon?limit=25')
-  const [allPokemon, setAllPokemon] = useState()
-  const [loaded, setLoaded] = useState(false)
-  const [search, setSearch] = useState('')
-  const [selectedGen, setSelectedGen] = useState('Select Generation')
-  const [playingGame, setPlayingGame] = useState(false)
-  const [card1, setCard1] = useState('')
-  const [card2, setCard2] = useState('')
-  const [player1, setPlayer1] = useState([])
-  const [player2, setPlayer2] = useState([])
-  const [player, setPlayer] = useState(1)
-  const [flipCards, setFlipCards] = useState(false)
+    this.state = {
+      url: 'https://pokeapi.co/api/v2/pokemon?limit=25',
+      allPokemon:[],
+      loaded: false,
+      search: '',
+      selectedGen: 'Select Generation',
+      playingGame: false,
+      card1: '',
+      card2: '',
+      player1: [],
+      player2: [],
+      player: 1,
+      flipCards: false
+    }
 
-  const getPokemon = async () => {
-    const res = await axios.get(url)
-    .catch(err => console.log(err, 'error'))
-    const data = res.data   
-    setUrl(data.next)
-
-    const getEachPokemon = (result) => {
-      result.forEach(async pokemon => {
-        const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
-        .catch(err => console.log('error', err))
-        const data = res.data
-
-        await setAllPokemon([...allPokemon, data])
+    this.getPokemon = async () => {
+      const res = await axios.get(this.state.url).catch(err => console.log(err, 'error'))
+      const data = res.data
+      
+      this.setState({
+        url: data.next
       })
-      setLoaded(true)
-    }
 
-    getEachPokemon(data.results)
+      const getEachPokemon = (result) => {
+        result.forEach(async pokemon => {
+          const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`).catch(err => console.log('error', err))
+          const data = res.data
+          await this.setState({
+            allPokemon: [...this.state.allPokemon, data]
+          })
+        })
+        this.setState({loaded: true})
+      }
+
+      getEachPokemon(data.results)
+    };
+  };
+  
+  // const [url, setUrl] = useState('https://pokeapi.co/api/v2/pokemon?limit=25')
+  // const [allPokemon, setAllPokemon] = useState()
+  // const [loaded, setLoaded] = useState(false)
+  // const [search, setSearch] = useState('')
+  // const [selectedGen, setSelectedGen] = useState('Select Generation')
+  // const [playingGame, setPlayingGame] = useState(false)
+  // const [card1, setCard1] = useState('')
+  // const [card2, setCard2] = useState('')
+  // const [player1, setPlayer1] = useState([])
+  // const [player2, setPlayer2] = useState([])
+  // const [player, setPlayer] = useState(1)
+  // const [flipCards, setFlipCards] = useState(false)
+
+  // useEffect(() => {
+  //   if(!loaded){
+  //     getPokemon()
+  //   }
+  // }, [loaded, getPokemon])
+
+  // const getPokemon = async () => {
+  //   const res = await axios.get(this.state.url).catch(err => console.log(err, 'error'))
+  //   const data = res.data
+    
+  //   this.setState({
+  //     url: data.next
+  //   })
+
+  //   const getEachPokemon = (result) => {
+  //     result.forEach(async pokemon => {
+  //       const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`).catch(err => console.log('error', err))
+  //       const data = res.data
+  //       await this.setState({
+  //         allPokemon: [...this.state.allPokemon, data]
+  //       })
+  //     })
+  //     this.setState({loaded: true})
+  //   }
+
+  //   getEachPokemon(data.results)
+  // };
+
+
+  componentDidMount(){
+    if(!this.loaded){
+      this.getPokemon()
+    }
   };
 
-  useEffect(() => {
-    if(!loaded){
-      getPokemon()
-    }
-  }, [loaded, getPokemon])
+  render() {
+    const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player, flipCards} = this.state
 
-  const handleChange = (value) => {
-    setSearch( value)
-  };
+    const handleChange = (value) => {
+      this.setState({search: value})
+    };
 
-  const searchPokemon = async () => {
-      await setAllPokemon([])
-      await setLoaded(false)
+    const searchPokemon = async () => {
+      await this.setState({ allPokemon: [], loaded: false })
       const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${search}`)
       const data = res.data
-      await setAllPokemon([allPokemon, data])
-      this.setLoaded(true)
-  };
+      await this.setState({ allPokemon: [...this.state.allPokemon, data] })
+      this.setState({loaded: true})
+    };
 
-  const aToZ = () => {
+    const aToZ = () => {
       const sortedPokemon = allPokemon.sort((poke, mon) => {
         if(poke.name < mon.name ) return -1 
         if(mon.name < poke.name ) return 1 
         else return 0
       })
-      setAllPokemon(sortedPokemon)
-  };
+      this.setState({allPokemon: sortedPokemon})
+    };
 
-  const sortByNum = () => {
+    const sortByNum = () => {
       const sortedPokemon = allPokemon.sort((poke, mon) => {
         if(poke.id < mon.id ) return -1 
         if(mon.id < poke.id ) return 1 
         else return 0
       })
-      setAllPokemon(sortedPokemon)
-  };
+      this.setState({allPokemon: sortedPokemon})
+    };
 
-  const shuffle = () => {
+    const shuffle = () => {
       let arr =  [...allPokemon]
       if(playingGame){
         arr = [...allPokemon, ...allPokemon]
@@ -93,30 +144,34 @@ export default function App() {
         arr[i] = arr[randomNum]
         arr[randomNum] = temp
       }
+      this.setState({
+        allPokemon: arr
+      })
+    };
 
-      setAllPokemon(arr)
-  };
+    const getGroup = async (newUrl) => {
+      await this.setState({
+        url: newUrl[0], 
+        allPokemon: [],
+        selectedGen: newUrl[1],
+        loaded: false
+      })
 
-  const getGroup = async (newUrl) => {
-      setUrl()
-      setAllPokemon([])
-      setSelectedGen(newUrl[2])
-      setLoaded(false)
+      this.getPokemon()
+    };
 
-      getPokemon()
-  };
-
-  const playGame = async () => {
+    const playGame = async () => {
       const duplicate = () => {
-        setPlayingGame(true)
-        setAllPokemon([...allPokemon, ...allPokemon])
-
-        shuffle()
+        this.setState({
+          playingGame: true,
+          allPokemon: [...allPokemon, ...allPokemon]
+        }, shuffle())
       }
-      duplicate() 
-  };
 
-  const endGame = () => {
+      duplicate() 
+    };
+
+    const endGame = () => {
       Swal.fire({
         icon: 'success',
         title: `Player ${player} Wins!`,
@@ -125,34 +180,40 @@ export default function App() {
         imageUrl: `${Finished}`,
         timer: 10000
       }).then(() => stopGame())
-  };
+    };
 
     const stopGame = async () => {
-      setPlayingGame(false)
-      setUrl('https://pokeapi.co/api/v2/pokemon')
-      setAllPokemon([])
-      setSelectedGen('Select Generation')
-      setCard1('')
-      setCard2('')
-      setPlayer(1)
-      setPlayer1([])
-      setPlayer2([])
+      await this.setState({
+        playingGame: false,
+        url: 'https://pokeapi.co/api/v2/pokemon',
+        allPokemon: [],
+        selectedGen: 'Select Generation',
+        card1: '',
+        card2: '',
+        player: 1,
+        player1: [],
+        player2: []
+      });
 
-      getPokemon()
+      this.getPokemon()
     };
 
     const updatePlayer = () => {
       if(player === 1){
-        setPlayer(2)
-        card1('')
+        this.setState({
+          player: 2,
+          card1: ''
+        })
       }else{
-        setPlayer(1)
-        setCard1('')
+        this.setState({
+          player: 1,
+          card1: ''
+        })
       }
     };
 
     const handleCard = (name, i) => {
-      setFlipCards(false)
+      this.setState({flipCards: false})
       
       let resetCards = async () => {
         if(card1[1] === name && i !== card1[0]){ 
@@ -164,10 +225,10 @@ export default function App() {
             imageUrl: `${Success}`
           })
           if(player === 1){
-            setPlayer1([...player1, name])
+            this.setState({player1: [...player1, name]})
           }
           if(player === 2){
-            setPlayer2([...player2, name])
+            this.setState({player2: [...player2, name]})
           }
         }else{
           await Swal.fire({
@@ -177,17 +238,23 @@ export default function App() {
             imageHeight: 250,
             imageUrl: `${Failure}`
           })
-            setFlipCards(true)
+            this.setState({flipCards: true})
             updatePlayer()
         }
-        setCard1('')
-        setCard2('')
+        this.setState({
+          card1: '',
+          card2: ''
+        })
       }
 
       if(card1 === ''){
-        setCard1([i,name])
+        this.setState({
+          card1: [i, name]
+        })
       }else{
-        setCard2([i,name])
+        this.setState({
+          card2: [i, name]
+        })
         setTimeout(() => {
           resetCards(name, i)
         }, 100);
@@ -268,12 +335,12 @@ export default function App() {
         </div>
         {playingGame?
           null:
-          <Button variant='secondary' onClick={getPokemon}>Get More Pokemon</Button>
+          <Button variant='secondary' onClick={this.getPokemon}>Get More Pokemon</Button>
         }
       </div>
     )
   };
-// };
+};
 
 
 // function mapStateToProps(reduxState) {

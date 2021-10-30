@@ -52,20 +52,6 @@ p{
   margin: 0px 10px;
 }
 
-.card-section{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  border: 5px solid black;
-}
-.row-num{
-  display: flex;
-  flex-direction: column;
-  height: 200px;
-  width: 35px;
-  background-color: black;
-  color: white;
-}
 .card-wrapper{
   display: flex;
   flex-wrap: wrap;

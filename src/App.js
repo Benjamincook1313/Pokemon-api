@@ -26,8 +26,8 @@ export default class App extends Component {
       player1: [],
       player2: [],
       player: 1,
-      flipCards: false,
-      rows: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
+      flipCards: false
+      // rows: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
     }
 
     this.getPokemon = async () => {
@@ -59,7 +59,7 @@ export default class App extends Component {
   };
 
   render() {
-    const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player, flipCards, rows} = this.state
+    const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player, flipCards} = this.state
 
     const handleChange = (value) => {
       this.setState({search: value})

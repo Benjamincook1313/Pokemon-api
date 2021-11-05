@@ -26,8 +26,8 @@ export default class App extends Component {
       player1: [],
       player2: [],
       player: 1,
-      flipCards: false
-      // rows: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
+      flipCards: false,
+      rows: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25']
     }
 
     this.getPokemon = async () => {
@@ -59,10 +59,10 @@ export default class App extends Component {
   };
 
   render() {
-    const { allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player, flipCards} = this.state
+    const { rows, allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player, flipCards} = this.state
 
     const handleChange = (value) => {
-      this.setState({search: value})
+      this.setState({search: `${value.toLowerCase()}`})
     };
 
     const searchPokemon = async () => {
@@ -238,6 +238,7 @@ export default class App extends Component {
 
     return (
       <div className='App'>
+        <div className='top'></div>
         <div className='title'>
           <img className='pokeball' src={Pokeball} alt='pokeball' />
           <h1 className='heading'>Welcome, Pokemon Trainer!</h1>
@@ -284,32 +285,43 @@ export default class App extends Component {
             <Button variant='dark' onClick={playGame}>Play Memory</Button>
           }
         </div>
-        <div className='card-wrapper'>
-        {loaded? allPokemon.map((pokemon, i) => (
-            <Card 
-              key={i}
-              i={i}
-              id={pokemon.id}
-              name={pokemon.name}
-              img={pokemon.sprites.other.dream_world.front_default}
-              types={pokemon.types}
-              playingGame={playingGame}
-              checkCard={() => handleCard(pokemon.name, i)}
-              card1={card1}
-              card2={card2}
-              flipCards={flipCards}
-              player1={player1}
-              player2={player2}
-              endGame={endGame}
-              allPokemon={allPokemon}
-            />
-          )):'...loading'
-        }
+        <div className='wrapper'>
+          {/* <div className='num-wrapper'>
+            {playingGame? rows.map(num => 
+              <div className='row-nums'>{num}</div>)
+              : null
+            }
+          </div> */}
+          {/* {playingGame? <div className='row-nums'>1</div>: null} */}
+          {/* <div className='row-nums'>num</div> */}
+          <div className='card-wrapper'>
+            {loaded? allPokemon.map((pokemon, i) => (
+                <Card 
+                  key={i}
+                  i={i}
+                  id={pokemon.id}
+                  name={pokemon.name}
+                  img={pokemon.sprites.other.dream_world.front_default}
+                  types={pokemon.types}
+                  playingGame={playingGame}
+                  checkCard={() => handleCard(pokemon.name, i)}
+                  card1={card1}
+                  card2={card2}
+                  flipCards={flipCards}
+                  player1={player1}
+                  player2={player2}
+                  endGame={endGame}
+                  allPokemon={allPokemon}
+                />
+              )):'...loading'
+            }
+          </div>
         </div>
         {playingGame?
           null:
           <Button variant='secondary' onClick={this.getPokemon}>Get More Pokemon</Button>
         }
+        <div className='bottom'></div>
       </div>
     )
   };

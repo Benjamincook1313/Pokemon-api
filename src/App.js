@@ -20,6 +20,7 @@ export default class App extends Component {
       loaded: false,
       search: '',
       selectedGen: 'Select Generation',
+      selectedType: 0,
       playingGame: false,
       card1: '',
       card2: '',
@@ -27,7 +28,7 @@ export default class App extends Component {
       player2: [],
       player: 1,
       flipCards: false,
-      rows: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25']
+      rows: []
     }
 
     this.getPokemon = async () => {
@@ -46,7 +47,48 @@ export default class App extends Component {
       }
 
       getEachPokemon(data.results)
+
+      const test = async () => {
+        const res = await axios.get(`https://pokeapi.co/api/v2/type/3`).catch(err => console.log('error', err))
+        const data = res.data
+        console.log(data)
+      }
+
+      // test()
     };
+
+    this.getType = async (type) => {
+      await this.setState({selectedType: type[1], loaded: false, allPokemon: [], selectedGen: 'Select Generation'})
+      const res = await axios.get(`${type[0]}`).catch(err => console.log(err, 'error'))
+      const data = res.data
+
+      const getEachPokemon = (result) => {
+        result.forEach( async pokemon => {
+          const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.pokemon.name}`).catch(err => console.log('error', err))
+          const data = res.data
+          
+          this.setState({allPokemon: [...this.state.allPokemon, data]})
+        })
+
+        this.setState({loaded: true})
+      }
+
+      getEachPokemon(data.pokemon)
+    };
+
+    this.numOfRows = () => {
+      let length = 30
+      let num = 1
+      let rows = [] 
+      for(let i=0; i<length; i++){
+        rows = [...rows, num]
+        num++
+      }
+      this.setState({
+        rows: rows
+      })
+    }
+
   };
 
 
@@ -55,11 +97,13 @@ export default class App extends Component {
       this.getPokemon()
     }
 
+    this.numOfRows()
+
     console.log('component mounted')
   };
 
   render() {
-    const { rows, allPokemon, loaded, selectedGen, playingGame, search, card1, card2, player1, player2, player, flipCards} = this.state
+    const { rows, allPokemon, loaded, selectedGen, selectedType, playingGame, search, card1, card2, player1, player2, player, flipCards} = this.state
 
     const handleChange = (value) => {
       this.setState({search: `${value.toLowerCase()}`})
@@ -71,7 +115,7 @@ export default class App extends Component {
         try {
           const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${search}`)
           const data = res.data
-          await this.setState({ allPokemon: [...this.state.allPokemon, data] })
+          this.setState({ allPokemon: [...this.state.allPokemon, data] })
         } catch (err){
           console.log(err)
           Swal.fire({
@@ -97,12 +141,23 @@ export default class App extends Component {
       this.setState({allPokemon: sortedPokemon})
     };
 
+    const sortType = () => {
+      console.log(allPokemon[1].types)
+      // const sortedPokemon = allPokemon.sort((poke, mon) => {
+      //   if(poke.name < mon.name ) return -1 
+      //   if(mon.name < poke.name ) return 1 
+      //   else return 0
+      // })
+      // this.setState({allPokemon: sortedPokemon})
+    };
+
     const sortByNum = () => {
       const sortedPokemon = allPokemon.sort((poke, mon) => {
         if(poke.id < mon.id ) return -1 
         if(mon.id < poke.id ) return 1 
         else return 0
       })
+
       this.setState({allPokemon: sortedPokemon})
     };
 
@@ -119,12 +174,13 @@ export default class App extends Component {
       })
     };
 
-    const getGroup = async (newUrl) => {
-      await this.setState({
+    const getGroup = (newUrl) => {
+      this.setState({
         url: newUrl[0], 
         allPokemon: [],
         selectedGen: newUrl[1],
-        loaded: false
+        loaded: false,
+        selectedType: 'Select Type'
       })
 
       this.getPokemon()
@@ -165,7 +221,8 @@ export default class App extends Component {
         card2: '',
         player: 1,
         player1: [],
-        player2: []
+        player2: [],
+        selectedType: 'Select Type'
       });
 
       this.getPokemon()
@@ -234,7 +291,7 @@ export default class App extends Component {
       }
     };
 
-    // console.log(this.state)
+    // console.log(allPokemon.length)
 
     return (
       <div className='App'>
@@ -250,7 +307,10 @@ export default class App extends Component {
             <h5>Player1:</h5>
             <ul className='matches'>{player1.map((name, i) => <li className='matches-item' key={i}>{name}</li>)}</ul>
           </div>
-          <h2>Player {player}</h2>
+          <div className='App'>
+            <h2>Player {player}'s turn </h2>
+            <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
+          </div>
           <div className='score'>
             <h5>Player2:</h5>
             <ul className='matches'>{player2.map((name, i) => <li className='matches-item' key={i}>{name}</li>)}</ul>
@@ -266,10 +326,18 @@ export default class App extends Component {
             }
         </div>
         <div className='sort-btns'>
-          {!playingGame? <Button variant='dark' onClick={sortByNum}>Sort By #</Button>: null} 
+          {/* {!playingGame? <Button variant='dark' onClick={sortByNum}>Sort By #</Button>: null} 
           {!playingGame? <Button variant='dark' onClick={aToZ}>Sort A-Z</Button>: null} 
-          {!playingGame? <Button variant='dark' onClick={shuffle}>Shuffle</Button>: null}
+          {!playingGame? <Button variant='dark' onClick={shuffle}>Shuffle</Button>: null} */}
 
+          {playingGame? null:
+            <DropdownButton id="dropdown-basic-button" title={'Sort By'} variant='dark'>
+              <Dropdown.Item onClick={aToZ}>A-Z</Dropdown.Item>
+              <Dropdown.Item onClick={sortByNum}>#</Dropdown.Item>
+              <Dropdown.Item onClick={aToZ}>Shuffle</Dropdown.Item>
+            </DropdownButton>
+          }
+          
           {playingGame? null:
             <DropdownButton id="dropdown-basic-button" title={selectedGen} variant='dark'>
               {(selectedGen !== 'Select Generation')? <Dropdown.Item onClick={stopGame}>Home</Dropdown.Item>: null}
@@ -278,22 +346,45 @@ export default class App extends Component {
               <Dropdown.Item onClick={() => getGroup(['https://pokeapi.co/api/v2/pokemon?limit=135&offset=251', 'Gen 3'])}>Gen 3</Dropdown.Item>
             </DropdownButton>
           }
+          
+          {playingGame? null:
+            <DropdownButton id="dropdown-basic-button" title={(selectedType == 0) ? 'Select Type': selectedType} variant='dark'>
+              {(selectedGen !== 'Select Generation')? <Dropdown.Item onClick={stopGame}>Home</Dropdown.Item>: null}
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/1', 'Normal'])}>Normal</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/2', 'Fighting'])}>Fighting</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/3', 'Flying'])}>Flying</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/4', 'Poison'])}>Poison</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/5', 'Ground'])}>Ground</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/6', 'Rock'])}>Rock</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/7', 'Bug'])}>Bug</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/8', 'Ghost'])}>Ghost</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/9', 'Steal'])}>Steel</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/10', 'Fire'])}>Fire</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/11', 'Water'])}>Water</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/12', 'Grass'])}>Grass</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/13', 'Electric'])}>Electric</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/14', 'Psychic'])}>Psychic</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/15', 'Ice'])}>Ice</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/16', 'Dragon'])}>Dragon</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/17', 'Dark'])}>Dark</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/18', 'Fairy'])}>Fairy</Dropdown.Item>
+
+            </DropdownButton>
+          }
 
           {playingGame? 
-            <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
-            :
+            // <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
+            null:
             <Button variant='dark' onClick={playGame}>Play Memory</Button>
           }
         </div>
         <div className='wrapper'>
-          {/* <div className='num-wrapper'>
+          <div className='num-wrapper'>
             {playingGame? rows.map(num => 
               <div className='row-nums'>{num}</div>)
               : null
             }
-          </div> */}
-          {/* {playingGame? <div className='row-nums'>1</div>: null} */}
-          {/* <div className='row-nums'>num</div> */}
+          </div>
           <div className='card-wrapper'>
             {loaded? allPokemon.map((pokemon, i) => (
                 <Card 
@@ -319,7 +410,7 @@ export default class App extends Component {
         </div>
         {playingGame?
           null:
-          <Button variant='secondary' onClick={this.getPokemon}>Get More Pokemon</Button>
+          <Button variant='secondary' style={{ marginTop: '20px' }} onClick={this.getPokemon}>Get More Pokemon</Button>
         }
         <div className='bottom'></div>
       </div>

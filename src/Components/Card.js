@@ -104,7 +104,6 @@ const Card = ({ i, id, name, img, types, playingGame, checkCard, card1, card2, f
             }
         </div>: 
         <div>
-          {/* <h1>Pokemon Memory</h1> */}
           <img className='card-back small' src={CardBack} alt='Pokemon Card'/>
         </div>
       }

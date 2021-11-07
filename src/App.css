@@ -1,7 +1,7 @@
 .App{
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   flex-direction: column;
   margin: 20px;
 }
@@ -48,6 +48,7 @@ p{
   flex-direction: column;
   border: 2px solid black;
   border-radius: 5px;
+  padding: 5px;
 }
 .matches{
   display: flex;
@@ -59,17 +60,15 @@ p{
 }
 .wrapper{
   display: flex;
+  max-height: 900px;
+  overflow-y: scroll;
 }
-/* .num-wrapper{
-  max-height: 100vh;
-  width: 20px;
-  overflow: scroll;
-} */
+
 .row-nums {
-  margin: 5px;
+  margin: 5px 0px;
   background-color: black;
-  height: 200px;
-  width: 20px;
+  height: 205px;
+  width: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,6 +78,7 @@ p{
   display: flex;
   flex-wrap: wrap;
   max-height: 100%;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   margin-bottom: 25px;

@@ -1,0 +1,29 @@
+.Login{
+  position: absolute;
+  top: 150px;
+  right: 300px;
+  height: 400px;
+  width: 600px;
+  padding: 20px;
+  border: 2px solid black;
+  background-color: white;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: center;
+  z-index: 3;
+  box-shadow: 20px 20px 10px;
+}
+.center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.close{
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  cursor: pointer;
+}

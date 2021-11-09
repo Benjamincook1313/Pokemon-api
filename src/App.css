@@ -13,6 +13,10 @@ p{
   height: 35px;
   background-color: black;
   margin-bottom: 25px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 20px;
 
 }
 .heading{
@@ -83,6 +87,17 @@ p{
   justify-content: center;
   margin-bottom: 25px;
 }
+.card-top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+.hrt{
+  height: 25px;
+  background: none;
+}
+
 .Card {
   box-shadow: 8px 8px 10px darkslategrey;
   display: flex;

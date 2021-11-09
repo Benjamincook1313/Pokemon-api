@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import CardBack from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/pokemon card.jpeg'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHeart } from '@fortawesome/free-solid-svg-icons'
 
-const Card = ({ i, id, name, img, types, playingGame, checkCard, card1, card2, flipCards, player1, player2, endGame, allPokemon}) => {
+export default function Card({ 
+  i, id, name, img, types, playingGame, checkCard, card1, card2, 
+  flipCards, player1, player2, endGame, allPokemon, loggedIn
+}) {
 
   const [showCard, setShowCard] = useState(true)
   const [startGame, setStartGame] = useState(false)
+  const [isFav, setIsFav] = useState(false)
 
   useEffect(() => {
     if(playingGame && !startGame){
@@ -93,7 +99,17 @@ const Card = ({ i, id, name, img, types, playingGame, checkCard, card1, card2, f
     <div className={`${playingGame? 'Card small': 'Card'}`} style={{background: `${getColors()}`}} onClick={selectCard}>
       {showCard? 
         <div className='card-info'>
-          <p style={{margin: '0px'}}>#0{id}</p>
+          <div className='card-top'>
+            <p style={{margin: '0px'}}>#0{id}</p>
+            {loggedIn?
+              <FontAwesomeIcon 
+              icon={faHeart} 
+              style={isFav? {color: 'red'}: {color: 'white'}} 
+              onClick={() => setIsFav(!isFav)} 
+              cursor='pointer'
+            />: null
+            }
+          </div>
           <div className='img-container'>
             <img className='poke-img' src={img} alt={name} />
           </div>
@@ -110,5 +126,3 @@ const Card = ({ i, id, name, img, types, playingGame, checkCard, card1, card2, f
     </div>
   )
 };
-
-export default Card;

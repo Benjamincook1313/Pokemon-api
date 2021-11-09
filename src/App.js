@@ -66,8 +66,9 @@ export default class App extends Component {
         result.forEach( async pokemon => {
           const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.pokemon.name}`).catch(err => console.log('error', err))
           const data = res.data
-          
-          this.setState({allPokemon: [...this.state.allPokemon, data]})
+          if(data.sprites.other.dream_world.front_default){
+            this.setState({allPokemon: [...this.state.allPokemon, data]})
+          }
         })
 
         this.setState({loaded: true})
@@ -141,16 +142,6 @@ export default class App extends Component {
       this.setState({allPokemon: sortedPokemon})
     };
 
-    const sortType = () => {
-      console.log(allPokemon[1].types)
-      // const sortedPokemon = allPokemon.sort((poke, mon) => {
-      //   if(poke.name < mon.name ) return -1 
-      //   if(mon.name < poke.name ) return 1 
-      //   else return 0
-      // })
-      // this.setState({allPokemon: sortedPokemon})
-    };
-
     const sortByNum = () => {
       const sortedPokemon = allPokemon.sort((poke, mon) => {
         if(poke.id < mon.id ) return -1 
@@ -174,8 +165,8 @@ export default class App extends Component {
       })
     };
 
-    const getGroup = (newUrl) => {
-      this.setState({
+    const getGroup = async (newUrl) => {
+      await this.setState({
         url: newUrl[0], 
         allPokemon: [],
         selectedGen: newUrl[1],
@@ -326,6 +317,7 @@ export default class App extends Component {
             }
         </div>
         <div className='sort-btns'>
+
           {/* {!playingGame? <Button variant='dark' onClick={sortByNum}>Sort By #</Button>: null} 
           {!playingGame? <Button variant='dark' onClick={aToZ}>Sort A-Z</Button>: null} 
           {!playingGame? <Button variant='dark' onClick={shuffle}>Shuffle</Button>: null} */}
@@ -334,7 +326,7 @@ export default class App extends Component {
             <DropdownButton id="dropdown-basic-button" title={'Sort By'} variant='dark'>
               <Dropdown.Item onClick={aToZ}>A-Z</Dropdown.Item>
               <Dropdown.Item onClick={sortByNum}>#</Dropdown.Item>
-              <Dropdown.Item onClick={aToZ}>Shuffle</Dropdown.Item>
+              <Dropdown.Item onClick={shuffle}>Shuffle</Dropdown.Item>
             </DropdownButton>
           }
           
@@ -380,10 +372,10 @@ export default class App extends Component {
         </div>
         <div className='wrapper'>
           <div className='num-wrapper'>
-            {playingGame? rows.map(num => 
+            {/* {playingGame? rows.map(num => 
               <div className='row-nums'>{num}</div>)
               : null
-            }
+            } */}
           </div>
           <div className='card-wrapper'>
             {loaded? allPokemon.map((pokemon, i) => (

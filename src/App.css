@@ -59,20 +59,20 @@ p{
   margin: 0px 10px;
 }
 .wrapper{
-  display: flex;
+  /* display: flex;
   max-height: 900px;
-  overflow-y: scroll;
+  overflow-y: scroll; */
 }
 
 .row-nums {
-  margin: 5px 0px;
+  /* margin: 5px 0px;
   background-color: black;
   height: 205px;
   width: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: white; */
 }
 .card-wrapper{
   display: flex;

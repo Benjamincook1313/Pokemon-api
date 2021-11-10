@@ -29,9 +29,12 @@ export default class App extends Component {
       player2: [],
       player: 1,
       flipCards: false,
-      rows: [],
       loggingIn: false,
-      loggedIn: false
+      loggedIn: false,
+      // second: 0,
+      // min: 0,
+      // hour: 0,
+
     }
 
     this.getPokemon = async () => {
@@ -45,19 +48,19 @@ export default class App extends Component {
           const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`).catch(err => console.log('error', err))
           const data = res.data
 
-          await this.setState({allPokemon: [...this.state.allPokemon, data]})
+          this.setState({allPokemon: [...this.state.allPokemon, data]})
         })
-
+        
         this.setState({loaded: true})
       }
 
       getEachPokemon(data.results)
 
-      const test = async () => {
-        const res = await axios.get(`https://pokeapi.co/api/v2/type/3`).catch(err => console.log('error', err))
-        const data = res.data
-        console.log(data)
-      }
+      // const test = async () => {
+      //   const res = await axios.get(`https://pokeapi.co/api/v2/type/3`).catch(err => console.log('error', err))
+      //   const data = res.data
+      //   console.log(data)
+      // }
 
       // test()
     };
@@ -110,7 +113,7 @@ export default class App extends Component {
 
   render() {
     const { 
-      rows, allPokemon, loaded, selectedGen, selectedType, 
+      allPokemon, loaded, selectedGen, selectedType, 
       playingGame, search, card1, card2, player1, player2, 
       player, flipCards, loggingIn, loggedIn
     } = this.state
@@ -213,7 +216,8 @@ export default class App extends Component {
         imageHeight: 250,
         imageUrl: `${Finished}`,
         timer: 10000
-      }).then(() => stopGame())
+      })
+      // .then(() => stopGame())
     };
 
     const stopGame = async () => {
@@ -334,15 +338,15 @@ export default class App extends Component {
         {playingGame? 
         <div className='player-wrapper'>
           <div className='score'>
-            <h5>Player1:</h5>
+            <h5 >Player 1:</h5>
             <ul className='matches'>{player1.map((name, i) => <li className='matches-item' key={i}>{name}</li>)}</ul>
           </div>
           <div className='App'>
-            <h2>Player {player}'s turn </h2>
+            <h2 className='player'>Player {player}'s turn </h2>
             <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
           </div>
           <div className='score'>
-            <h5>Player2:</h5>
+            <h5>Player 2:</h5>
             <ul className='matches'>{player2.map((name, i) => <li className='matches-item' key={i}>{name}</li>)}</ul>
           </div>
         </div>
@@ -374,7 +378,7 @@ export default class App extends Component {
           }
           
           {playingGame? null:
-            <DropdownButton id="dropdown-basic-button" title={(selectedType == 0) ? 'Select Type': selectedType} variant='dark'>
+            <DropdownButton id="dropdown-basic-button" title={(selectedType === 0) ? 'Select Type': selectedType} variant='dark'>
               {(selectedGen !== 'Select Generation')? <Dropdown.Item onClick={stopGame}>Home</Dropdown.Item>: null}
               <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/1', 'Normal'])}>Normal</Dropdown.Item>
               <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/2', 'Fighting'])}>Fighting</Dropdown.Item>
@@ -406,10 +410,6 @@ export default class App extends Component {
         </div>
         <div className='wrapper'>
           <div className='num-wrapper'>
-            {/* {playingGame? rows.map(num => 
-              <div className='row-nums'>{num}</div>)
-              : null
-            } */}
           </div>
           <div className='card-wrapper'>
             {loaded? allPokemon.map((pokemon, i) => (

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import './Styles/Card.css'
 import CardBack from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/pokemon card.jpeg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart } from '@fortawesome/free-solid-svg-icons'
@@ -101,7 +102,7 @@ export default function Card({
         <div className='card-info'>
           <div className='card-top'>
             <p style={{margin: '0px'}}>#0{id}</p>
-            {loggedIn?
+            {loggedIn && !playingGame?
               <FontAwesomeIcon 
               icon={faHeart} 
               style={isFav? {color: 'red'}: {color: 'white'}} 
@@ -115,8 +116,8 @@ export default function Card({
           </div>
           <h2 className={playingGame? 'card-small': 'card-name'}>{name.charAt(0).toUpperCase() + name.slice(1)}</h2>
             {types.length > 1?
-              <p style={{margin: '0px'}}>type: {`${types[0].type.name} / ${types[1].type.name}`}</p>:
-              <p style={{margin: '0px'}}>type: {types[0].type.name}</p>
+              <p style={{margin: '0px 5px'}}>type: {`${types[0].type.name} / ${types[1].type.name}`}</p>:
+              <p style={{margin: '0px 5px'}}>type: {types[0].type.name}</p>
             }
         </div>: 
         <div>

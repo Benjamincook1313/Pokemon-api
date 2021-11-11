@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import './App.css'
 import Card from './Components/Card'
-import Login from './Components/Login'
+// import Login from './Components/Login'
 import { Button, InputGroup, FormControl, DropdownButton, Dropdown } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Swal from 'sweetalert2'
@@ -28,6 +28,7 @@ export default class App extends Component {
       player1: [],
       player2: [],
       player: 1,
+      players: 1,
       flipCards: false,
       loggingIn: false,
       loggedIn: false,
@@ -115,7 +116,7 @@ export default class App extends Component {
     const { 
       allPokemon, loaded, selectedGen, selectedType, 
       playingGame, search, card1, card2, player1, player2, 
-      player, flipCards, loggingIn, loggedIn
+      player, flipCards, loggingIn, loggedIn, players
     } = this.state
 
     const handleChange = (value) => {
@@ -211,7 +212,7 @@ export default class App extends Component {
     const endGame = () => {
       Swal.fire({
         icon: 'success',
-        title: `Player ${player} Wins!`,
+        title: (players === 2)? `Player ${player} Wins!`: null,
         text: 'Game Over',
         imageHeight: 250,
         imageUrl: `${Finished}`,
@@ -231,7 +232,8 @@ export default class App extends Component {
         player: 1,
         player1: [],
         player2: [],
-        selectedType: 'Select Type'
+        selectedType: 'Select Type',
+        players: 1
       });
 
       this.getPokemon()
@@ -259,7 +261,7 @@ export default class App extends Component {
           Swal.fire({
             icon: 'success',
             title: 'Cards Match',
-            text: `Player ${player} gets another turn!`,
+            text: (players === 2)? `Player ${player === 1? '2': '1'} gets a turn!`: null,
             imageHeight: 250,
             imageUrl: `${Success}`,
           })
@@ -273,7 +275,7 @@ export default class App extends Component {
           await Swal.fire({
             icon: 'error',
             title: "Cards Don't Match",
-            text: `Player ${player === 1? '2': '1'} gets a turn!`,
+             text: (players === 2)? `Player ${player === 1? '2': '1'} gets a turn!`: null,
             imageHeight: 250,
             imageUrl: `${Failure}`
           })
@@ -302,17 +304,17 @@ export default class App extends Component {
 
     // Authenication
 
-    const toggleSignIn = () => {
-      this.setState({ loggingIn: true})
-    };
+    // const toggleSignIn = () => {
+    //   this.setState({ loggingIn: true})
+    // };
 
-    const signIn = () => {
+    // const signIn = () => {
 
-    };
+    // };
 
-    const signOut = () => {
+    // const signOut = () => {
 
-    };
+    // };
 
     // console.log(allPokemon.length)
 
@@ -335,7 +337,7 @@ export default class App extends Component {
           <h1 className='heading'>Welcome, Pokemon Trainer!</h1>
           <img className='pokeball' src={Pokeball} alt='pokeball'/>
         </div>
-        {playingGame? 
+        {playingGame && (players === 2)? 
         <div className='player-wrapper'>
           <div className='score'>
             <h5 >Player 1:</h5>
@@ -351,6 +353,13 @@ export default class App extends Component {
           </div>
         </div>
         : null}
+        {(players === 1) && playingGame?
+          <div className='btns'>
+            <Button style={{margin: '10px'}} variant='dark' onClick={() => this.setState({players: 2})}>2 players</Button>
+            <Button style={{margin: '10px'}} variant='dark' onClick={stopGame}>Stop Playing</Button>
+          </div>
+          : null
+        }
         <div className='srch'>
           {!playingGame? 
             <InputGroup className="mb-3">
@@ -388,7 +397,7 @@ export default class App extends Component {
               <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/6', 'Rock'])}>Rock</Dropdown.Item>
               <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/7', 'Bug'])}>Bug</Dropdown.Item>
               <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/8', 'Ghost'])}>Ghost</Dropdown.Item>
-              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/9', 'Stel'])}>Steel</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/9', 'Steel'])}>Steel</Dropdown.Item>
               <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/10', 'Fire'])}>Fire</Dropdown.Item>
               <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/11', 'Water'])}>Water</Dropdown.Item>
               <Dropdown.Item onClick={() => this.getType(['https://pokeapi.co/api/v2/type/12', 'Grass'])}>Grass</Dropdown.Item>

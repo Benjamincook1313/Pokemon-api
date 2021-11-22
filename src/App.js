@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import './App.css'
 import Card from './Components/Card'
+import Timer from './Components/Timer'
 // import Login from './Components/Login'
 import { Button, InputGroup, FormControl, DropdownButton, Dropdown } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -32,6 +33,7 @@ export default class App extends Component {
       flipCards: false,
       loggingIn: false,
       loggedIn: false,
+      startTime: false,
       // second: 0,
       // min: 0,
       // hour: 0,
@@ -116,7 +118,7 @@ export default class App extends Component {
     const { 
       allPokemon, loaded, selectedGen, selectedType, 
       playingGame, search, card1, card2, player1, player2, 
-      player, flipCards, loggingIn, loggedIn, players
+      player, flipCards, loggingIn, loggedIn, players, startTime
     } = this.state
 
     const handleChange = (value) => {
@@ -233,7 +235,8 @@ export default class App extends Component {
         player1: [],
         player2: [],
         selectedType: 'Select Type',
-        players: 1
+        players: 1,
+        startTime: false
       });
 
       this.getPokemon()
@@ -357,6 +360,7 @@ export default class App extends Component {
           <div className='btns'>
             <Button style={{margin: '10px'}} variant='dark' onClick={() => this.setState({players: 2})}>2 players</Button>
             <Button style={{margin: '10px'}} variant='dark' onClick={stopGame}>Stop Playing</Button>
+            <Timer startTime={startTime} />
           </div>
           : null
         }
@@ -439,6 +443,7 @@ export default class App extends Component {
                   endGame={endGame}
                   allPokemon={allPokemon}
                   loggedIn={loggedIn}
+                  startTime={() =>  this.setState({startTime: true})}
                 />
               )):'...loading'
             }

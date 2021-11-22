@@ -6,7 +6,7 @@ import { faHeart } from '@fortawesome/free-solid-svg-icons'
 
 export default function Card({ 
   i, id, name, img, types, playingGame, checkCard, card1, card2, 
-  flipCards, player1, player2, endGame, allPokemon, loggedIn
+  flipCards, player1, player2, endGame, allPokemon, loggedIn, startTime
 }) {
 
   const [showCard, setShowCard] = useState(true)
@@ -89,6 +89,7 @@ export default function Card({
   const selectCard = () => {
     if(!startGame){
       setStartGame(true)
+      startTime()
     }
     if(!showCard){
       setShowCard(true)

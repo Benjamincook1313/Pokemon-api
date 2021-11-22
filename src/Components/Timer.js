@@ -3,7 +3,7 @@ import { Clock, Num } from './Styles/Style'
 
 function Timer(props) {
 
-  const { startTime } = props
+  const { startTime, playingGame } = props
 
   const [start, setStart] = useState(false)
   const [time, setTime] = useState(0)
@@ -18,12 +18,19 @@ function Timer(props) {
     }else{
       clearInterval(interval)
     }
-    if(startTime){
+    if(startTime && playingGame && startTime){
       setStart(true)
+    }
+    if(!playingGame){
+      setTime(0)
+    }
+    if(!startTime){
+      setStart(false)
+      clearInterval(interval)
     }
 
     return () => clearInterval(interval)
-  }, [start, startTime])
+  }, [start, startTime, time, playingGame])
 
   return (
     <div className='App'>

@@ -33,11 +33,7 @@ export default class App extends Component {
       flipCards: false,
       loggingIn: false,
       loggedIn: false,
-      startTime: false,
-      // second: 0,
-      // min: 0,
-      // hour: 0,
-
+      startTime: false
     }
 
     this.getPokemon = async () => {
@@ -108,8 +104,6 @@ export default class App extends Component {
     if(!this.loaded){
       this.getPokemon()
     }
-
-    this.numOfRows()
 
     console.log('Component Mounted')
   };
@@ -220,7 +214,6 @@ export default class App extends Component {
         imageUrl: `${Finished}`,
         timer: 10000
       })
-      // .then(() => stopGame())
     };
 
     const stopGame = async () => {
@@ -278,7 +271,7 @@ export default class App extends Component {
           await Swal.fire({
             icon: 'error',
             title: "Cards Don't Match",
-             text: (players === 2)? `Player ${player === 1? '2': '1'} gets a turn!`: null,
+            text: (players === 2)? `Player ${player === 1? '2': '1'} gets a turn!`: null,
             imageHeight: 250,
             imageUrl: `${Failure}`
           })
@@ -360,7 +353,7 @@ export default class App extends Component {
           <div className='btns'>
             <Button style={{margin: '10px'}} variant='dark' onClick={() => this.setState({players: 2})}>2 players</Button>
             <Button style={{margin: '10px'}} variant='dark' onClick={stopGame}>Stop Playing</Button>
-            <Timer startTime={startTime} />
+            <Timer startTime={startTime} playingGame={playingGame} />
           </div>
           : null
         }
@@ -444,6 +437,7 @@ export default class App extends Component {
                   allPokemon={allPokemon}
                   loggedIn={loggedIn}
                   startTime={() =>  this.setState({startTime: true})}
+                  stopTime={() => this.setState({startTime: false})}
                 />
               )):'...loading'
             }

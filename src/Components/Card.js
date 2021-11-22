@@ -6,7 +6,7 @@ import { faHeart } from '@fortawesome/free-solid-svg-icons'
 
 export default function Card({ 
   i, id, name, img, types, playingGame, checkCard, card1, card2, 
-  flipCards, player1, player2, endGame, allPokemon, loggedIn, startTime
+  flipCards, player1, player2, endGame, allPokemon, loggedIn, startTime, stopTime
 }) {
 
   const [showCard, setShowCard] = useState(true)
@@ -27,10 +27,12 @@ export default function Card({
     if(card2[0] === i && flipCards){
       setShowCard(false)
     }
-    if((player1.length + player2.length) === (allPokemon.length / 2) && playingGame){
+    if((player1.length + player2.length) === (allPokemon.length / 2) && playingGame && startGame){
       endGame()
+      stopTime()
+      setStartGame(false)
     }
-  }, [playingGame, startGame, flipCards, card1, card2, i, player1, player2, endGame, allPokemon])
+  }, [playingGame, startGame, flipCards, card1, card2, i, player1, player2, endGame, allPokemon, stopTime])
 
   const typeColor = (str) => {
     switch(str){

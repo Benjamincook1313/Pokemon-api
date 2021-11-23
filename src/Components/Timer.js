@@ -33,7 +33,7 @@ function Timer(props) {
   }, [start, startTime, time, playingGame])
 
   return (
-    <div className='App'>
+    <div className='Timer'>
       <Clock>
         <Num>{('0' + Math.floor((time / 60000) % 60)).slice(-2)}:</Num>
         <Num>{('0' + Math.floor((time / 1000) % 60)).slice(-2)}:</Num>

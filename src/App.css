@@ -63,3 +63,16 @@ h2{
   margin-top: 25px;
 }
 
+.btns{
+  margin: 10px;
+  width: 500px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.Timer{
+  position: relative;
+  top: 5px;
+}
+

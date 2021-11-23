@@ -351,9 +351,9 @@ export default class App extends Component {
         : null}
         {(players === 1) && playingGame?
           <div className='btns'>
-            <Button style={{margin: '10px'}} variant='dark' onClick={() => this.setState({players: 2})}>2 players</Button>
-            <Button style={{margin: '10px'}} variant='dark' onClick={stopGame}>Stop Playing</Button>
+            <Button variant='dark' onClick={() => this.setState({players: 2})}>2 players</Button>
             <Timer startTime={startTime} playingGame={playingGame} />
+            <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
           </div>
           : null
         }

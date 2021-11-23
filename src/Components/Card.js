@@ -30,9 +30,9 @@ export default function Card({
     if((player1.length + player2.length) === (allPokemon.length / 2) && playingGame && startGame){
       endGame()
       stopTime()
-      setStartGame(false)
+      // setStartGame(false)
     }
-  }, [playingGame, startGame, flipCards, card1, card2, i, player1, player2, endGame, allPokemon, stopTime])
+  }, [playingGame, startGame, flipCards, card1, card2, i, player1, player2, endGame, allPokemon, stopTime, startTime])
 
   const typeColor = (str) => {
     switch(str){

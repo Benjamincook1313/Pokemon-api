@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/Pokemon-api/static/css/main.db4f780d.chunk.css",
-    "main.js": "/Pokemon-api/static/js/main.7c5eb27b.chunk.js",
-    "main.js.map": "/Pokemon-api/static/js/main.7c5eb27b.chunk.js.map",
+    "main.css": "/Pokemon-api/static/css/main.84c19b3b.chunk.css",
+    "main.js": "/Pokemon-api/static/js/main.61678508.chunk.js",
+    "main.js.map": "/Pokemon-api/static/js/main.61678508.chunk.js.map",
     "runtime-main.js": "/Pokemon-api/static/js/runtime-main.82d7fd5f.js",
     "runtime-main.js.map": "/Pokemon-api/static/js/runtime-main.82d7fd5f.js.map",
     "static/css/2.f2512455.chunk.css": "/Pokemon-api/static/css/2.f2512455.chunk.css",
-    "static/js/2.bc3de187.chunk.js": "/Pokemon-api/static/js/2.bc3de187.chunk.js",
-    "static/js/2.bc3de187.chunk.js.map": "/Pokemon-api/static/js/2.bc3de187.chunk.js.map",
+    "static/js/2.5df2609d.chunk.js": "/Pokemon-api/static/js/2.5df2609d.chunk.js",
+    "static/js/2.5df2609d.chunk.js.map": "/Pokemon-api/static/js/2.5df2609d.chunk.js.map",
     "index.html": "/Pokemon-api/index.html",
     "static/css/2.f2512455.chunk.css.map": "/Pokemon-api/static/css/2.f2512455.chunk.css.map",
-    "static/css/main.db4f780d.chunk.css.map": "/Pokemon-api/static/css/main.db4f780d.chunk.css.map",
-    "static/js/2.bc3de187.chunk.js.LICENSE.txt": "/Pokemon-api/static/js/2.bc3de187.chunk.js.LICENSE.txt",
+    "static/css/main.84c19b3b.chunk.css.map": "/Pokemon-api/static/css/main.84c19b3b.chunk.css.map",
+    "static/js/2.5df2609d.chunk.js.LICENSE.txt": "/Pokemon-api/static/js/2.5df2609d.chunk.js.LICENSE.txt",
     "static/media/branden-skeli-bRojCEo0uow-unsplash.dcadee43.jpg": "/Pokemon-api/static/media/branden-skeli-bRojCEo0uow-unsplash.dcadee43.jpg",
     "static/media/lia-xKRv2abDDeg-unsplash.ffc1cfeb.jpg": "/Pokemon-api/static/media/lia-xKRv2abDDeg-unsplash.ffc1cfeb.jpg",
     "static/media/photo-1605979257913-1704eb7b6246.dc3ce87b.jpeg": "/Pokemon-api/static/media/photo-1605979257913-1704eb7b6246.dc3ce87b.jpeg",
@@ -21,8 +21,8 @@
   "entrypoints": [
     "static/js/runtime-main.82d7fd5f.js",
     "static/css/2.f2512455.chunk.css",
-    "static/js/2.bc3de187.chunk.js",
-    "static/css/main.db4f780d.chunk.css",
-    "static/js/main.7c5eb27b.chunk.js"
+    "static/js/2.5df2609d.chunk.js",
+    "static/css/main.84c19b3b.chunk.css",
+    "static/js/main.61678508.chunk.js"
   ]
 }

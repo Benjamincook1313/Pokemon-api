@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import './App.css'
+import { ResetBtn, Poke } from './Components/Styles/Style'
 import Card from './Components/Card'
 import Timer from './Components/Timer'
 // import Login from './Components/Login'
@@ -216,6 +217,21 @@ export default class App extends Component {
       })
     };
 
+    const resetGame = () => {
+      this.setState({
+        selectedGen: 'Select Generation',
+        card1: '',
+        card2: '',
+        player: 1,
+        player1: [],
+        player2: [],
+        selectedType: 'Select Type',
+        players: 1,
+        startTime: false
+      })
+
+    };
+
     const stopGame = async () => {
       await this.setState({
         playingGame: false,
@@ -329,9 +345,9 @@ export default class App extends Component {
           : null
         } */}
         <div className='title'>
-          <img className='pokeball' src={Pokeball} alt='pokeball' />
+          <Poke src={Pokeball} alt='pokeball' />
           <h1 className='heading'>Welcome, Pokemon Trainer!</h1>
-          <img className='pokeball' src={Pokeball} alt='pokeball'/>
+          <Poke src={Pokeball} alt='pokeball'/>
         </div>
         {playingGame && (players === 2)? 
         <div className='player-wrapper'>
@@ -342,6 +358,7 @@ export default class App extends Component {
           <div className='App'>
             <h2 className='player'>Player {player}'s turn </h2>
             <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
+            <ResetBtn variant='dark' onClick={resetGame}>Reset Game</ResetBtn>
           </div>
           <div className='score'>
             <h5>Player 2:</h5>
@@ -354,6 +371,7 @@ export default class App extends Component {
             <Button variant='dark' onClick={() => this.setState({players: 2})}>2 players</Button>
             <Timer startTime={startTime} playingGame={playingGame} />
             <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
+            <ResetBtn variant='dark' onClick={resetGame}>Reset Game</ResetBtn>
           </div>
           : null
         }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import './App.css'
-import { ResetBtn, Poke } from './Components/Styles/Style'
+import { Poke, Score } from './Components/Styles/Style'
 import Card from './Components/Card'
 import Timer from './Components/Timer'
 // import Login from './Components/Login'
@@ -19,7 +19,7 @@ export default class App extends Component {
 
     this.state = {
       url: 'https://pokeapi.co/api/v2/pokemon?limit=25',
-      allPokemon:[],
+      allPokemon: [],
       loaded: false,
       search: '',
       selectedGen: 'Select Generation',
@@ -33,7 +33,7 @@ export default class App extends Component {
       players: 1,
       flipCards: false,
       loggingIn: false,
-      loggedIn: false,
+      loggedIn: true,
       startTime: false
     }
 
@@ -143,8 +143,6 @@ export default class App extends Component {
       }
     };
 
-    // Sort By Functions
-
     const aToZ = () => {
       const sortedPokemon = allPokemon.sort((poke, mon) => {
         if(poke.name < mon.name ) return -1 
@@ -189,9 +187,6 @@ export default class App extends Component {
       this.getPokemon()
     };
 
-
-    // Memory Game Functions
-
     const playGame = async () => {
       let arr = await [...allPokemon, ...allPokemon]
       for(let i=0; i < arr.length; i++){
@@ -228,8 +223,7 @@ export default class App extends Component {
         selectedType: 'Select Type',
         players: 1,
         startTime: false
-      })
-
+      }, shuffle())
     };
 
     const stopGame = async () => {
@@ -351,19 +345,19 @@ export default class App extends Component {
         </div>
         {playingGame && (players === 2)? 
         <div className='player-wrapper'>
-          <div className='score'>
+          <Score>
             <h5 >Player 1:</h5>
             <ul className='matches'>{player1.map((name, i) => <li className='matches-item' key={i}>{name}</li>)}</ul>
-          </div>
+          </Score>
           <div className='App'>
             <h2 className='player'>Player {player}'s turn </h2>
             <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
-            <ResetBtn variant='dark' onClick={resetGame}>Reset Game</ResetBtn>
+            <Button className='resetBtn' variant='' size='sm' onClick={resetGame}>Reset Game</Button>
           </div>
-          <div className='score'>
+          <Score>
             <h5>Player 2:</h5>
             <ul className='matches'>{player2.map((name, i) => <li className='matches-item' key={i}>{name}</li>)}</ul>
-          </div>
+          </Score>
         </div>
         : null}
         {(players === 1) && playingGame?
@@ -371,7 +365,7 @@ export default class App extends Component {
             <Button variant='dark' onClick={() => this.setState({players: 2})}>2 players</Button>
             <Timer startTime={startTime} playingGame={playingGame} />
             <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
-            <ResetBtn variant='dark' onClick={resetGame}>Reset Game</ResetBtn>
+            <Button className='resetBtn' variant='dark' size='sm' onClick={resetGame}>Reset Game</Button>
           </div>
           : null
         }
@@ -456,6 +450,7 @@ export default class App extends Component {
                   loggedIn={loggedIn}
                   startTime={() =>  this.setState({startTime: true})}
                   stopTime={() => this.setState({startTime: false})}
+                  timeStarted={startTime}
                 />
               )):'...loading'
             }

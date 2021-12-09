@@ -35,7 +35,11 @@ p{
   max-height: 50px;
   margin: 0px 50px;
 }
-
+.resetBtn{
+  position: absolute;
+  top: 150px;
+  margin-right: 18px;
+}
 .player-wrapper{
   width: 100%;
   display: flex;
@@ -51,7 +55,7 @@ p{
   align-items: center;
   justify-content: space-evenly;
   width: 100%;
-  margin: 20px;
+  margin: 10px;
 }
 h2{
   text-decoration: underline;
@@ -71,6 +75,7 @@ h2{
   align-items: center;
   justify-content: space-evenly;
 }
+
 .Timer{
   position: relative;
   top: 5px;

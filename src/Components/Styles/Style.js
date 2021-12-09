@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 
+
 export const Clock = styled.div`
   display: flex;
   align-items: center;
@@ -19,7 +20,7 @@ export const Num = styled.h1`
 
 export const ResetBtn = styled.button`
   position: absolute;
-  top: 265px;
+  top: 275px;
   margin-right: 0px;
 `
 export const Poke = styled.img`
@@ -31,9 +32,17 @@ export const Poke = styled.img`
   
 // `
 
-// export const Score = styled.button`
-  
-// `
+export const Score = styled.button`
+  background-color: lightblue;
+  width: 500px;
+  margin: 15px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border: 2px solid black;
+  border-radius: 5px;
+  padding: 5px;
+`
 
 // export const Heading = styled.button`
   

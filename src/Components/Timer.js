@@ -27,6 +27,7 @@ function Timer(props) {
     if(!startTime){
       setStart(false)
       clearInterval(interval)
+      setTime(0)
     }
 
     return () => clearInterval(interval)

@@ -111,14 +111,14 @@ export default function Card({
         <div className='card-info'>
           <div className='card-top'>
             <p style={{margin: '0px'}}>#0{id}</p>
-            {loggedIn && !playingGame?
+            {/* {loggedIn && !playingGame?
               <FontAwesomeIcon 
               icon={faHeart} 
               style={isFav? {color: 'red'}: {color: 'white'}} 
               onClick={() => setIsFav(!isFav)} 
               cursor='pointer'
             />: null
-            }
+            } */}
           </div>
           <div className='img-container'>
             <img className='poke-img' src={img} alt={name} />

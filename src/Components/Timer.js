@@ -3,10 +3,14 @@ import { Clock, Num } from './Styles/Style'
 
 function Timer(props) {
 
-  const { startTime, playingGame } = props
+  const { startTime, playingGame, setFinalTime } = props
 
   const [start, setStart] = useState(false)
   const [time, setTime] = useState(0)
+
+  let min = ('0' + Math.floor((time / 60000) % 60)).slice(-2)
+  let sec = ('0' + Math.floor((time / 1000) % 60)).slice(-2)
+  let ms = ('0' + (time / 10) % 100).slice(-2)
 
   useEffect(() => {
     let interval = null;
@@ -14,21 +18,21 @@ function Timer(props) {
     if(start){
       interval = setInterval(() => {
         setTime(prevTime => prevTime + 10)
+        setFinalTime(`${min}:${sec}:${ms}`)
       }, 10)
-    }else{
-      clearInterval(interval)
-    }
-    if(startTime && playingGame && startTime){
-      setStart(true)
-    }
-    if(!playingGame){
-      setTime(0)
-    }
+      
+    }else clearInterval(interval)
+    
+    if(startTime && playingGame) setStart(true)
+    
+    if(!playingGame) setTime(0)
+    
     if(!startTime){
       setStart(false)
       clearInterval(interval)
       setTime(0)
     }
+    
 
     return () => clearInterval(interval)
   }, [start, startTime, time, playingGame])
@@ -36,9 +40,9 @@ function Timer(props) {
   return (
     <div className='Timer'>
       <Clock>
-        <Num>{('0' + Math.floor((time / 60000) % 60)).slice(-2)}:</Num>
-        <Num>{('0' + Math.floor((time / 1000) % 60)).slice(-2)}:</Num>
-        <Num>{('0' + (time / 10) % 100).slice(-2)}</Num>
+        <Num>{min}:</Num>
+        <Num>{sec}:</Num>
+        <Num>{ms}</Num>
       </Clock>
     </div>
   );

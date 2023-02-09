@@ -40,7 +40,6 @@
   text-align: center;
   margin: 0px 5px;
   position: relative;
-  /* top: 5px */
 }
 
 .Card {
@@ -64,15 +63,15 @@
 }
 .card-small{
   font-size: 18px;
-  width: 100%;
+  width: 99%;
   text-align: center;
   padding: 0px 5px;
 }
 
 .card-back{
   position: relative;
-  right: 7px;
-  bottom: 7px;
+  right: 6px;
+  bottom: 6px;
   border-radius: 8px;
 }
 

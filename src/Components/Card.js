@@ -1,44 +1,39 @@
 import React, { useState, useEffect } from 'react'
 import './Styles/Card.css'
-import CardBack from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/pokemon card.jpeg'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeart } from '@fortawesome/free-solid-svg-icons'
+import CardBack from '../images/pokemon card.jpeg'
 
 export default function Card({ 
   i, id, name, img, types, playingGame, checkCard, card1, card2, 
-  flipCards, player1, player2, endGame, allPokemon, loggedIn, startTime, 
+  flipCards, matches1, matches2, endGame, allPokemon, startTime, 
   stopTime, timeStarted
 }) {
 
   const [showCard, setShowCard] = useState(true)
   const [startGame, setStartGame] = useState(false)
-  const [isFav, setIsFav] = useState(false)
 
   useEffect(() => {
-    if(playingGame && !startGame){
-      setShowCard(false)
-    }
+    if(playingGame && !startGame) setShowCard(false)
+
     if(!playingGame){
       setShowCard(true)
       setStartGame(false)
     }
-    if(card1[0] === i && flipCards){
-      setShowCard(false)
-    }
-    if(card2[0] === i && flipCards){
-      setShowCard(false)
-    }
-    if((player1.length + player2.length) === (allPokemon.length / 2) && playingGame && startGame){
+
+    if(card1[0] === i && flipCards) setShowCard(false)
+    if(card2[0] === i && flipCards) setShowCard(false)
+
+    if((matches1.length + matches2.length) === (allPokemon.length / 2) && playingGame && startGame && (matches1.length + matches2.length) !== 0){
       endGame()
       stopTime()
       setStartGame(false)
     }
+
     if(!timeStarted && startGame){
       setStartGame(false)
       setShowCard(false)
-      console.log('hit')
     }
-  }, [playingGame, startGame, flipCards, card1, card2, i, player1, player2, endGame, allPokemon, stopTime, startTime])
+
+  }, [playingGame, startGame, flipCards, card1, card2, i, matches1, matches2, endGame, allPokemon, stopTime, startTime])
 
   const typeColor = (str) => {
     switch(str){
@@ -111,14 +106,6 @@ export default function Card({
         <div className='card-info'>
           <div className='card-top'>
             <p style={{margin: '0px'}}>#0{id}</p>
-            {/* {loggedIn && !playingGame?
-              <FontAwesomeIcon 
-              icon={faHeart} 
-              style={isFav? {color: 'red'}: {color: 'white'}} 
-              onClick={() => setIsFav(!isFav)} 
-              cursor='pointer'
-            />: null
-            } */}
           </div>
           <div className='img-container'>
             <img className='poke-img' src={img} alt={name} />

@@ -35,11 +35,29 @@ p{
   max-height: 50px;
   margin: 0px 50px;
 }
-.resetBtn{
-  position: absolute;
-  top: 130px;
-  margin-right: 18px;
+.restBtn{
+  display: block;
 }
+.p2-center{
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  align-items: center;
+  height: 130px;
+  justify-content: space-evenly;
+}
+.p2-btns{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.btns-center{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
 .player-wrapper{
   width: 100%;
   display: flex;
@@ -81,3 +99,6 @@ h2{
   top: 5px;
 }
 
+.swal2-popup{
+  opacity: .7
+}

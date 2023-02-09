@@ -10,16 +10,18 @@ export const Clock = styled.div`
   height: 50px;
   border: 2px solid black;
   margin-bottom: 10px;
-  padding: 5px 0px 0px 0px;
+  box-sizing: content-box;
+  padding: 0px 5px;
 `
 
 export const Num = styled.h1`
   width: 120px;
   text-align: center;
+  margin: 0px;
 `
 
 export const ResetBtn = styled.button`
-  position: absolute;
+  /* position: absolute; */
   top: 275px;
   margin-right: 0px;
 `

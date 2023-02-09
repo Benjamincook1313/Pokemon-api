@@ -4,14 +4,13 @@ import './App.css'
 import { Poke, Score } from './Components/Styles/Style'
 import Card from './Components/Card'
 import Timer from './Components/Timer'
-// import Login from './Components/Login'
 import { Button, InputGroup, FormControl, DropdownButton, Dropdown } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Swal from 'sweetalert2'
-import Success from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/branden-skeli-bRojCEo0uow-unsplash.jpg'
-import Failure from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/lia-xKRv2abDDeg-unsplash.jpg'
-import Pokeball from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/pokeball-png-45332 (1).png'
-import Finished from '/Users/benjamin/fun-projects/Practice/pokemon/src/images/photo-1605979257913-1704eb7b6246.jpeg'
+import Success from './images/branden-skeli-bRojCEo0uow-unsplash.jpg'
+import Failure from './images/lia-xKRv2abDDeg-unsplash.jpg'
+import Pokeball from './images/pokeball-png-45332 (1).png'
+import Finished from './images/photo-1605979257913-1704eb7b6246.jpeg'
 
 export default class App extends Component {
   constructor(props){
@@ -27,14 +26,15 @@ export default class App extends Component {
       playingGame: false,
       card1: '',
       card2: '',
-      player1: [],
-      player2: [],
+      name1: 'Player 1',
+      name2: "Player 2",
+      matches1: [],
+      matches2: [],
       player: 1,
       players: 1,
       flipCards: false,
-      loggingIn: false,
-      loggedIn: true,
-      startTime: false
+      startTime: false,
+      finalTime: ''
     }
 
     this.getPokemon = async () => {
@@ -44,9 +44,9 @@ export default class App extends Component {
       this.setState({url: data.next})
 
       const getEachPokemon = (result) => {
-        result.forEach(async pokemon => {
+        result.map(async pokemon => {
           const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`).catch(err => console.log('error', err))
-          const data = res.data
+          const {data} = res
 
           this.setState({allPokemon: [...this.state.allPokemon, data]})
         })
@@ -55,15 +55,7 @@ export default class App extends Component {
       }
 
       getEachPokemon(data.results)
-
-      // const test = async () => {
-      //   const res = await axios.get(`https://pokeapi.co/api/v2/type/3`).catch(err => console.log('error', err))
-      //   const data = res.data
-      //   console.log(data)
-      // }
-
-      // test()
-    };
+    }
 
     this.getType = async (type) => {
       await this.setState({selectedType: type[1], loaded: false, allPokemon: [], selectedGen: 'Select Generation'})
@@ -83,46 +75,36 @@ export default class App extends Component {
       }
 
       getEachPokemon(data.pokemon)
-    };
-
-    this.numOfRows = () => {
-      let length = 30
-      let num = 1
-      let rows = [] 
-      for(let i=0; i<length; i++){
-        rows = [...rows, num]
-        num++
-      }
-      this.setState({
-        rows: rows
-      })
     }
 
+    
   };
-
 
   componentDidMount(){
     if(!this.loaded){
       this.getPokemon()
     }
-
-    console.log('Component Mounted')
+    // console.log('Component Mounted')
   };
 
   render() {
+    // console.log("App Rendered");
     const { 
       allPokemon, loaded, selectedGen, selectedType, 
-      playingGame, search, card1, card2, player1, player2, 
-      player, flipCards, loggingIn, loggedIn, players, startTime
+      playingGame, search, card1, card2, name1, name2, matches1, matches2,
+      player, flipCards, players, startTime, finalTime
     } = this.state
 
     const handleChange = (value) => {
       this.setState({search: `${value.toLowerCase()}`})
     };
 
-    const searchPokemon = async () => {
+    const searchPokemon = async (e) => {
+      e.preventDefault()
+
       if(search !== ''){
         await this.setState({ allPokemon: [], loaded: false })
+
         try {
           const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${search}`)
           const data = res.data
@@ -149,6 +131,7 @@ export default class App extends Component {
         if(mon.name < poke.name ) return 1 
         else return 0
       })
+
       this.setState({allPokemon: sortedPokemon})
     };
 
@@ -195,21 +178,30 @@ export default class App extends Component {
         arr[i] = arr[randomNum]
         arr[randomNum] = temp
       }
-      this.setState({
-        playingGame: true,
-        allPokemon: arr
-      })
+
+      this.setState({playingGame: true, allPokemon: arr})
     };
 
+
+
     const endGame = () => {
+
+      const whoWon = () => {
+        if(matches1.length > matches2.length) return name1
+        else if(matches1.length === matches2.length) return 'Draw'
+        else return name2
+      }
+
       Swal.fire({
         icon: 'success',
-        title: (players === 2)? `Player ${player} Wins!`: null,
-        text: 'Game Over',
+        title: `Winner!`,
+        text: (players === 2)? whoWon(): `Time: ${finalTime}`,
         imageHeight: 250,
         imageUrl: `${Finished}`,
         timer: 10000
       })
+      
+      resetGame();
     };
 
     const resetGame = () => {
@@ -218,8 +210,8 @@ export default class App extends Component {
         card1: '',
         card2: '',
         player: 1,
-        player1: [],
-        player2: [],
+        matches1: [],
+        matches2: [],
         selectedType: 'Select Type',
         players: 1,
         startTime: false
@@ -235,28 +227,23 @@ export default class App extends Component {
         card1: '',
         card2: '',
         player: 1,
-        player1: [],
-        player2: [],
+        name1: "",
+        name2: "",
+        matches1: [],
+        matches2: [],
         selectedType: 'Select Type',
         players: 1,
-        startTime: false
+        startTime: false,
+        finalTime: ''
       });
 
       this.getPokemon()
     };
 
     const updatePlayer = () => {
-      if(player === 1){
-        this.setState({
-          player: 2,
-          card1: ''
-        })
-      }else{
-        this.setState({
-          player: 1,
-          card1: ''
-        })
-      }
+      console.log("Player updated");
+      if(player === 1) this.setState({player: 2, card1: ''})
+      else this.setState({player: 1, card1: ''})
     };
 
     const handleCard = (name, i) => {
@@ -267,27 +254,31 @@ export default class App extends Component {
           Swal.fire({
             icon: 'success',
             title: 'Cards Match',
-            text: (players === 2)? `Player ${player === 1? '2': '1'} gets a turn!`: null,
+            text: (players === 2)&& `${player === 1? name1: name2} gets another turn!`,
             imageHeight: 250,
             imageUrl: `${Success}`,
+            timer: 2000,
+            showConfirmButton: false
           })
-          if(player === 1){
-            this.setState({player1: [...player1, name]})
-          }
-          if(player === 2){
-            this.setState({player2: [...player2, name]})
-          }
+
+          if(player === 1) this.setState({matches1: [...matches1, name]})
+          if(player === 2) this.setState({matches2: [...matches2, name]})
+
         }else{
           await Swal.fire({
             icon: 'error',
             title: "Cards Don't Match",
-            text: (players === 2)? `Player ${player === 1? '2': '1'} gets a turn!`: null,
+            text: (players === 2)&& `${player === 1? name2: name1} gets a turn!`,
             imageHeight: 250,
-            imageUrl: `${Failure}`
+            imageUrl: `${Failure}`,
+            timer: 2000,
+            showConfirmButton: false
           })
+
           this.setState({flipCards: true}) 
           updatePlayer()
-          }
+        }
+
         this.setState({
           card1: '',
           card2: ''
@@ -295,88 +286,95 @@ export default class App extends Component {
       }
 
       if(card1 === ''){
-        this.setState({
-          card1: [i, name]
-        })
+        this.setState({card1: [i, name]})
       }else{
-        this.setState({
-          card2: [i, name]
-        })
+        this.setState({card2: [i, name]})
         setTimeout(() => {
           resetCards(name, i)
         }, 100);
       }
     };
 
-    // Authenication
+    const setFinalTime = (time) => {
+      this.setState({finalTime: time})
+    };
 
-    // const toggleSignIn = () => {
-    //   this.setState({ loggingIn: true})
-    // };
+    const twoPlayers = async () => {
+      const {value: name1} = await Swal.fire({
+        title: 'Player 1',
+        input: 'text',
+        inputPlaceholder: 'name',
+        inputAttributes: {
+          autocapitalize: 'on',
+        }
+      })
 
-    // const signIn = () => {
+      const {value: name2} = await Swal.fire({
+        title: 'Player 2',
+        input: 'text',
+        inputPlaceholder: 'name',
+        inputAttributes: {
+          autocapitalize: 'on',
+        }
+      })
 
-    // };
+      this.setState({players: 2, name1: name1, name2: name2});
 
-    // const signOut = () => {
-
-    // };
-
-    // console.log(allPokemon.length)
+    }
 
     return (
       <div className='App'>
-        <div className='top'>
-          {/* {loggedIn?
-            <Button variant='light' size='sm' onClick={signOut}>Sign Out</Button>:
-            <Button variant='light' size='sm' onClick={toggleSignIn}>Sign In</Button>
-          } */}
-        </div>
-        {/* {loggingIn? 
-          <Login 
-            closeLogin={() => this.setState({loggingIn: false})}
-          />
-          : null
-        } */}
-        <div className='title'>
+        <span className='top'></span>
+
+        <header className='title'>
           <Poke src={Pokeball} alt='pokeball' />
           <h1 className='heading'>Welcome, Pokemon Trainer!</h1>
           <Poke src={Pokeball} alt='pokeball'/>
-        </div>
-        {playingGame && (players === 2)? 
-        <div className='player-wrapper'>
-          <Score>
-            <h5 >Player 1:</h5>
-            <ul className='matches'>{player1.map((name, i) => <li className='matches-item' key={i}>{name}</li>)}</ul>
-          </Score>
-          <div className='App'>
-            <h2 className='player'>Player {player}'s turn </h2>
-            <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
-            <Button className='resetBtn' variant='' size='sm' onClick={resetGame}>Reset Game</Button>
+        </header>
+
+        {(playingGame && (players === 2)) && 
+          <div className='player-wrapper'>
+            <Score>
+              <h5>{name1}</h5>
+              <ul className='matches'>{matches1.map((pokemon, i) => <li className='matches-item' key={i}>{pokemon}</li>)}
+              </ul>
+            </Score>
+            <section className='p2-center'>
+              <h2 className='player'>{player === 1? name1: name2}'s turn </h2>
+              <span className='p2-btns'>
+                <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
+                <Button  variant='dark' onClick={resetGame}>Reset Game</Button>
+              </span>
+            </section>
+            <Score>
+              <h5>{name2}</h5>
+              <ul className='matches'>{matches2.map((name, i) => <li className='matches-item' key={i}>{name}</li>)}</ul>
+            </Score>
           </div>
-          <Score>
-            <h5>Player 2:</h5>
-            <ul className='matches'>{player2.map((name, i) => <li className='matches-item' key={i}>{name}</li>)}</ul>
-          </Score>
-        </div>
-        : null}
-        {(players === 1) && playingGame?
-          <div className='btns'>
-            <Button variant='dark' onClick={() => this.setState({players: 2})}>2 players</Button>
-            <Timer startTime={startTime} playingGame={playingGame} />
-            <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
-            <Button className='resetBtn' variant='dark' size='sm' onClick={resetGame}>Reset Game</Button>
-          </div>
-          : null
         }
+
+        {((players === 1) && playingGame) &&
+          <div className='btns'>
+            <Button variant='dark' size="md" onClick={twoPlayers}>2 players</Button>
+            <div className='btns-center'>
+              <Button className='resetBtn' variant='dark' size='md' onClick={resetGame}>Reset Game</Button>
+              <Timer startTime={startTime} playingGame={playingGame} setFinalTime={setFinalTime}/>
+            </div>
+            <Button variant='dark' size="md" onClick={stopGame}>Stop Playing</Button>
+          </div>
+        }
+
         <div className='srch'>
-          {!playingGame? 
-            <InputGroup className="mb-3">
-              <FormControl placeholder="Search" aria-label="Search Pokemon" aria-describedby="basic-addon2" onChange={e => handleChange(e.target.value)}/>
-              <Button variant="outline-secondary" id="button-addon2" onClick={searchPokemon}>search</Button>
-            </InputGroup>: null
-            }
+          {!playingGame &&
+             <form >
+              <InputGroup className="mb-3">
+                <FormControl autoCorrect='' placeholder="Search" aria-label="Search Pokemon" aria-describedby="basic-addon2" onChange={e => handleChange(e.target.value)}/>
+                <Button type="submit" variant="outline-secondary" id="button-addon2" onClick={(e) => searchPokemon(e)}>search</Button>
+              </InputGroup>
+             </form>           
+          }
         </div>
+
         <div className='sort-btns'>
           {playingGame? null:
             <DropdownButton id="dropdown-basic-button" title={'Sort By'} variant='dark'>
@@ -420,15 +418,11 @@ export default class App extends Component {
             </DropdownButton>
           }
 
-          {playingGame? 
-            // <Button variant='dark' onClick={stopGame}>Stop Playing</Button>
-            null:
-            <Button variant='dark' onClick={playGame}>Play Memory</Button>
-          }
+          {!playingGame && <Button variant='dark' onClick={playGame}>Play Memory</Button>}
+
         </div>
+
         <div className='wrapper'>
-          <div className='num-wrapper'>
-          </div>
           <div className='card-wrapper'>
             {loaded? allPokemon.map((pokemon, i) => (
                 <Card 
@@ -443,11 +437,12 @@ export default class App extends Component {
                   card1={card1}
                   card2={card2}
                   flipCards={flipCards}
-                  player1={player1}
-                  player2={player2}
+                  name1={name1}
+                  name2={name2}
+                  matches1={matches1}
+                  matches2={matches2}
                   endGame={endGame}
                   allPokemon={allPokemon}
-                  loggedIn={loggedIn}
                   startTime={() =>  this.setState({startTime: true})}
                   stopTime={() => this.setState({startTime: false})}
                   timeStarted={startTime}
@@ -456,11 +451,12 @@ export default class App extends Component {
             }
           </div>
         </div>
-        {playingGame?
-          null:
+
+        {!playingGame &&
           <Button variant='secondary' style={{ marginTop: '20px' }} onClick={this.getPokemon}>Get More Pokemon</Button>
         }
-        <div className='bottom'></div>
+
+        <span className='bottom'></span>
       </div>
     )
   };
